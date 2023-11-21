@@ -8,10 +8,14 @@ export const useAuth0 = () => {
     let isAuthenticated = useState<Boolean>('tenantIsAuthenticated');
 
     const init = async () => {
-        auth0Client.value = await createAuth0Client({
+        const client = await createAuth0Client({
             domain: "dev-d62xibfl4x3znv4i.us.auth0.com",
             clientId: "kSmyKUQNRkiRv43tpC22TyU9iRPfa3ym",
         })
+
+        if (auth0Client.value != undefined) return;
+
+        auth0Client.value = client;
 
         if (location.search.includes("state=") && (location.search.includes("code=") || location.search.includes("error="))) {
             await auth0Client.value.handleRedirectCallback();
@@ -20,7 +24,13 @@ export const useAuth0 = () => {
 
         auth0ClientInitialized.value = true;
         isAuthenticated.value = await auth0Client.value.isAuthenticated();
-        if (isAuthenticated) tenant.value = await auth0Client.value.getUser();
+
+        if (isAuthenticated.value) {
+            tenant.value = await auth0Client.value.getUser()
+        } else {
+            login();
+        }
+
         console.log("%c🚀 Auth0Client initiated", "padding: 2px; padding-inline: 8px; background-color: green; text-color: white; border-radius: 2px");
     }
 
@@ -40,6 +50,9 @@ export const useAuth0 = () => {
             }
         })
     }
+
+    // Init Auth0Client client-side
+    if (process.client && auth0Client.value == undefined) init()
 
     return {
         init,

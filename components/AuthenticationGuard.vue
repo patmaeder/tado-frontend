@@ -1,16 +1,10 @@
 <template>
   <slot v-if="isAuthenticated"></slot>
-  <div v-else class="w-full h-screen bg-secondary"></div>
+  <div v-else class="w-full h-screen flex items-center justify-center bg-secondary">
+    <div id="authenticationGuard__loader"><div></div><div></div><div></div><div></div></div>
+  </div>
 </template>
 
 <script lang="ts" setup>
-const { init, auth0ClientInitialized, isAuthenticated, login } = useAuth0();
-
-onMounted(() => {
-  if (!auth0ClientInitialized.value) init();
-})
-
-watch(isAuthenticated, () => {
-    if (!isAuthenticated.value) login();
-})
+const { isAuthenticated } = useAuth0();
 </script>

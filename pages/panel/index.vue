@@ -4,5 +4,9 @@
 </template>
 
 <script lang="ts" setup>
-navigateTo("/panel/board");
+const { auth0ClientInitialized } = useAuth0();
+
+watch(auth0ClientInitialized, () => {
+  navigateTo("/panel/board");
+})
 </script>
