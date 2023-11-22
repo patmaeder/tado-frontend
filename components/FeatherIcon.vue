@@ -5,7 +5,7 @@
       color: props.color,
       width: props.width,
       height: props.height,
-      'stroke-width': props['stroke-width'] || '1.4',
+      'stroke-width': props['stroke-width'] || '1.5',
       'stroke-linecap': props['stroke-linecap'],
       'stroke-linejoin': props['stroke-linejoin']
   })">
