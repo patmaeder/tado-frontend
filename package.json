@@ -12,11 +12,13 @@
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@nuxtjs/tailwindcss": "^6.9.5",
+    "@types/feather-icons": "^4.29.4",
     "nuxt": "^3.8.2",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5"
   },
   "dependencies": {
-    "@auth0/auth0-spa-js": "^2.1.2"
+    "@auth0/auth0-spa-js": "^2.1.2",
+    "feather-icons": "^4.29.1"
   }
 }
