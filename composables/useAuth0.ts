@@ -4,13 +4,18 @@ import {useState} from "#app";
 export const useAuth0 = () => {
     let auth0Client = useState<Auth0Client>('auth0Client');
     let auth0ClientInitialized = useState<Boolean>('auth0ClientInitiated');
-    let tenant= useState<User|undefined>('tenant');
     let isAuthenticated = useState<Boolean>('tenantIsAuthenticated');
+    let tenant = useState<User | undefined>('tenant');
+    let accessToken = useState<String | undefined>('accessToken');
 
     const init = async () => {
         const client = await createAuth0Client({
             domain: "dev-d62xibfl4x3znv4i.us.auth0.com",
             clientId: "kSmyKUQNRkiRv43tpC22TyU9iRPfa3ym",
+            authorizationParams: {
+                redirect_uri: "http://localhost:3000/panel",
+                audience: "https://www.tado.com"
+            }
         })
 
         if (auth0Client.value != undefined) return;
@@ -26,7 +31,8 @@ export const useAuth0 = () => {
         isAuthenticated.value = await auth0Client.value.isAuthenticated();
 
         if (isAuthenticated.value) {
-            tenant.value = await auth0Client.value.getUser()
+            tenant.value = await auth0Client.value.getUser();
+            accessToken.value = await auth0Client.value.getTokenSilently();
         } else {
             login();
         }
@@ -35,12 +41,7 @@ export const useAuth0 = () => {
     }
 
     const login = () => {
-        auth0Client.value.loginWithRedirect({
-            authorizationParams: {
-                redirect_uri: "http://localhost:3000/panel",
-                audience: "https://www.tado.com"
-            }
-        });
+        auth0Client.value.loginWithRedirect();
     }
 
     const logout = () => {
@@ -61,5 +62,6 @@ export const useAuth0 = () => {
         logout,
         tenant,
         isAuthenticated,
+        accessToken
     }
 }
