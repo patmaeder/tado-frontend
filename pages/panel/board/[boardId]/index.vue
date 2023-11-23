@@ -4,7 +4,7 @@
 </template>
 
 <script lang="ts" setup>
-// TODO: Fetch boards and redirect to inbox of first board
-navigateTo("/panel/board/1/inbox")
+const route = useRoute()
+navigateTo(route.fullPath + "/inbox");
 </script>
 

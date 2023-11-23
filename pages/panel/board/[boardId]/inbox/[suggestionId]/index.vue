@@ -46,7 +46,7 @@
           </p>
         </div>
 
-        <div class="relative flex-grow ml-6 mt-6 border-l border-gray-300 overflow-hidden
+        <div class="relative flex-grow ml-6 mt-6 border-l border-gray-300 overflow-hidden isolate
                     before:absolute data-[before=hidden]:before:hidden before:top-0 before:left-0 before:w-full before:h-20 before:bg-gradient-to-b before:from-white before:to-transparent before:z-10
                     after:absolute data-[after=hidden]:after:hidden after:bottom-0 after:left-0 after:w-full after:h-20 after:bg-gradient-to-t after:from-white after:to-transparent after:z-10"
              data-after="true" data-before="hidden">

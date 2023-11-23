@@ -12,28 +12,50 @@
 
         <div class="col-span-3 h-full relative inline-flex items-center justify-end text-black">
           <button class="flex gap-4 items-center" @click="toggleHeaderDropdown">
-            <span>Menü</span>
+            <div v-if="route.path.includes('/board/')" class="h-12">
+              <img :src="currentBoard?.logo" class="h-full">
+            </div>
+            <span v-else>Menü</span>
             <FeatherIcon height="20" icon="chevron-down"/>
           </button>
           <dialog ref="headerDropdown"
-                  class="absolute top-0 translate-y-20 w-80 mt-4 mr-0 ml-auto rounded-md border border-gray-300 drop-shadow-md overflow-hidden z-10">
-            <div class="p-6">
-              <button class="flex items-center gap-4 hover:text-gray-700" @click="logout">
-                <FeatherIcon icon="log-out"/>
-                <span>Ausloggen</span>
-              </button>
+                  class="absolute top-0 translate-y-20 w-80 mt-4 mr-0 ml-auto bg-transparent z-10">
+            <div class="mb-2 p-6 bg-white rounded-md border border-gray-300 drop-shadow-md overflow-hidden">
+              <ul class="w-full flex flex-col gap-4">
+                <li v-for="board in boards" :key="board.id" class="h-14 w-full p-2 border border-gray-100 rounded">
+                  <NuxtLink :to="`/panel/board/${board.id}/inbox`">
+                    <img :src="board.logo" class="h-full w-full object-contain object-left">
+                  </NuxtLink>
+                </li>
+                <li>
+                  <button
+                      class="w-full h-14 flex gap-2 items-center justify-center text-white bg-secondary hover:bg-secondary-800 rounded-md"
+                      @click="showCreateNewBoardDialog">
+                    <span>Board erstellen</span>
+                    <FeatherIcon height="20" icon="plus"/>
+                  </button>
+                </li>
+              </ul>
             </div>
-            <NuxtLink
-                class="flex items-center justify-between gap-4 p-6 text-primary bg-primary-50 hover:bg-primary-100"
-                to="/panel/settings">
-              <div class="flex-grow flex flex-col">
-                <span>Account-Einstellungen</span>
-                <span class="text-sm font-light">{{ tenant?.email }}</span>
+            <div class="rounded-md bg-white border border-gray-300 drop-shadow-md overflow-hidden">
+              <div class="p-6">
+                <button class="flex items-center gap-4 hover:text-gray-700" @click="logout">
+                  <FeatherIcon icon="log-out"/>
+                  <span>Ausloggen</span>
+                </button>
               </div>
-              <div class="flex items-center justify-center h-8 aspect-square rounded-full border border-primary">
-                <FeatherIcon class="stroke-primary" height="16" icon="user"/>
-              </div>
-            </NuxtLink>
+              <NuxtLink
+                  class="flex items-center justify-between gap-4 p-6 text-primary bg-primary-50 hover:bg-primary-100"
+                  to="/panel/settings">
+                <div class="flex-grow flex flex-col">
+                  <span>Account-Einstellungen</span>
+                  <span class="text-sm font-light">{{ tenant?.email }}</span>
+                </div>
+                <div class="flex items-center justify-center h-8 aspect-square rounded-full border border-primary">
+                  <FeatherIcon class="stroke-primary" height="16" icon="user"/>
+                </div>
+              </NuxtLink>
+            </div>
           </dialog>
         </div>
       </header>
@@ -43,12 +65,23 @@
       </main>
 
     </div>
+    <CreateNewBoardDialog ref="createNewBoardDialog"/>
   </AuthenticationGuard>
 </template>
 
 <script lang="ts" setup>
+const route = useRoute();
 const {tenant, logout} = useAuth0();
+const boards = await useTado().getBoards();
+const currentBoard = await useTado().getBoard(route.params.boardId);
 const headerDropdown = ref<HTMLDialogElement>();
+const createNewBoardDialog = ref<HTMLDialogElement>();
+
+const showCreateNewBoardDialog = () => {
+  createNewBoardDialog.value.dialog.show();
+  /*console.log(createNewBoardDialog.value);
+  createNewBoardDialog.value?.showModal();*/
+}
 
 const toggleHeaderDropdown = () => {
   if (headerDropdown.value?.open) {

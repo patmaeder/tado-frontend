@@ -4,9 +4,12 @@
 </template>
 
 <script lang="ts" setup>
-const {auth0ClientInitialized} = useAuth0();
+const {getBoards} = useTado();
+const boards = await getBoards();
 
-watch(auth0ClientInitialized, () => {
-  navigateTo("/panel/board");
-})
+if (boards.value.length > 0) {
+  navigateTo(`/panel/board/${ boards.value[0].id }/inbox`);
+} else {
+  navigateTo("/");
+}
 </script>
