@@ -27,7 +27,6 @@ export const useAuth0 = () => {
             window.history.replaceState({}, document.title, window.location.href.split('?')[0]);
         }
 
-        auth0ClientInitialized.value = true;
         isAuthenticated.value = await auth0Client.value.isAuthenticated();
 
         if (isAuthenticated.value) {
@@ -37,7 +36,16 @@ export const useAuth0 = () => {
             login();
         }
 
+        auth0ClientInitialized.value = true;
         console.log("%c🚀 Auth0Client initiated", "padding: 2px; padding-inline: 8px; background-color: green; text-color: white; border-radius: 2px");
+    }
+
+    const untilAuth0Initialized = () => {
+        return new Promise((resolve, reject) => {
+            watch(auth0ClientInitialized, () => {
+                if (auth0ClientInitialized.value) resolve(true);
+            })
+        })
     }
 
     const login = () => {
@@ -58,6 +66,7 @@ export const useAuth0 = () => {
     return {
         init,
         auth0ClientInitialized,
+        untilAuth0Initialized,
         login,
         logout,
         tenant,
