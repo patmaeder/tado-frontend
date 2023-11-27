@@ -16,7 +16,7 @@
               <img :src="currentBoard?.logo" class="h-full">
             </div>
             <span v-else>Menü</span>
-            <FeatherIcon height="20" icon="chevron-down"/>
+            <ChevronDown height="20"/>
           </button>
           <dialog ref="headerDropdown"
                   class="absolute top-0 translate-y-20 w-80 mt-4 mr-0 ml-auto bg-transparent z-10">
@@ -32,7 +32,7 @@
                       class="w-full h-14 flex gap-2 items-center justify-center text-white bg-secondary hover:bg-secondary-800 rounded-md"
                       @click="showCreateNewBoardDialog">
                     <span>Board erstellen</span>
-                    <FeatherIcon height="20" icon="plus"/>
+                    <Plus height="20"/>
                   </button>
                 </li>
               </ul>
@@ -40,7 +40,7 @@
             <div class="rounded-md bg-white border border-gray-300 drop-shadow-md overflow-hidden">
               <div class="p-6">
                 <button class="flex items-center gap-4 hover:text-gray-700" @click="logout">
-                  <FeatherIcon icon="log-out"/>
+                  <LogOut/>
                   <span>Ausloggen</span>
                 </button>
               </div>
@@ -52,7 +52,7 @@
                   <span class="text-sm font-light">{{ tenant?.email }}</span>
                 </div>
                 <div class="flex items-center justify-center h-8 aspect-square rounded-full border border-primary">
-                  <FeatherIcon class="stroke-primary" height="16" icon="user"/>
+                  <User class="stroke-primary" height="16"/>
                 </div>
               </NuxtLink>
             </div>
@@ -70,6 +70,8 @@
 </template>
 
 <script lang="ts" setup>
+import {ChevronDown, LogOut, Plus} from "lucide-vue-next";
+
 const route = useRoute();
 const {tenant, logout} = useAuth0();
 const boards = await useTado().getBoards();

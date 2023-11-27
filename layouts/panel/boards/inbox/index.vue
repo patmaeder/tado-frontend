@@ -20,7 +20,7 @@
           <button
               class="flex-shrink-0 h-12 flex gap-2 items-center justify-center rounded text-sm text-white bg-secondary">
             <span>Kategorie hinzufügen</span>
-            <FeatherIcon icon="plus" width="18"/>
+            <Plus width="18"/>
           </button>
         </div>
       </div>
@@ -29,7 +29,7 @@
       <div class="max-h-full col-span-3 border-x border-gray-300 overflow-hidden">
         <div class="h-20 p-4 flex justify-between items-center border-b border-gray-300">
           <label class="flex-1 flex" for="filterQuery">
-            <FeatherIcon height="20" icon="search"/>
+            <Search height="20"/>
             <input id="filterQuery"
                    v-model="filterQuery"
                    class="w-full pl-2 bg-transparent text-ellipsis focus:outline-none"
@@ -45,7 +45,7 @@
               <option value="NEWEST">Neueste zuerst</option>
               <option value="OLDEST">Älteste zuerst</option>
             </select>
-            <FeatherIcon icon="sliders" width="20"/>
+            <SortDesc width="20"/>
           </label>
         </div>
         <ul>
@@ -92,6 +92,8 @@
 </template>
 
 <script lang="ts" setup>
+import {Plus, Search, SortDesc} from "lucide-vue-next";
+
 const route = useRoute();
 const activeCategory = ref(null);
 const filterQuery = ref('');
@@ -106,9 +108,13 @@ const visibleSuggestions = computed(() => {
   }
 
   if (filterQuery.value != '') {
-    temp = temp.filter(({title, description}) => title.includes(filterQuery.value) || description.includes(filterQuery.value));
+    temp = temp.filter(({
+                          title,
+                          description
+                        }) => title.includes(filterQuery.value) || description.includes(filterQuery.value));
   }
 
+  // TODO: Add sort by most upvotes
   switch (suggestionsOrder.value) {
     case 'NEWEST':
       temp.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1);

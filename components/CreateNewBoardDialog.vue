@@ -34,13 +34,13 @@
           <button
               class="flex-grow py-2 flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 font-medium rounded"
               @click="() => { createNewBoardDialog?.close() }">
-            <FeatherIcon height="20" icon="x-circle" stroke-width="2"/>
+            <XCircle height="20" stroke-width="2"/>
             <span>Abbrechen</span>
           </button>
           <button
               class="flex-grow py-2 flex items-center justify-center gap-2 bg-primary-100 hover:bg-primary-200 text-primary font-medium rounded"
               type="submit">
-            <FeatherIcon height="16" icon="check-circle" stroke-width="2"/>
+            <CheckCircle height="16" stroke-width="2"/>
             <span>Erstellen</span>
           </button>
         </div>
@@ -50,6 +50,8 @@
 </template>
 
 <script lang="ts" setup>
+import {CheckCircle, XCircle} from "lucide-vue-next";
+
 const createNewBoardDialog = ref<HTMLDialogElement>();
 const createNewBoardDialogForm = ref();
 const {createBoard} = useTado();

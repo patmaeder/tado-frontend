@@ -4,15 +4,15 @@
 
       <div class="flex-shrink-0 flex items-center h-20 pl-4 border-b border-gray-300">
         <button class="flex items-center gap-2 py-2 px-4 rounded hover:bg-gray-200">
-          <FeatherIcon icon="trash-2" width="20"/>
+          <Trash2 width="20"/>
           <span>Löschen</span>
         </button>
         <button class="flex items-center gap-2 py-2 px-4 rounded hover:bg-gray-200">
-          <FeatherIcon icon="lock" width="20"/>
+          <Lock width="20"/>
           <span>Schließen</span>
         </button>
         <button class="flex items-center gap-2 py-2 px-4 rounded hover:bg-gray-200">
-          <FeatherIcon icon="bookmark" width="20"/>
+          <Bookmark width="20"/>
           <span>Kategorie auswählen</span>
         </button>
       </div>
@@ -178,7 +178,7 @@
             <button
                 class="flex-shrink-0 flex justify-center items-center h-12 w-12 rounded bg-primary hover:bg-primary-400"
                 type="submit">
-              <FeatherIcon class="stroke-white" icon="send" width="20"/>
+              <Send class="stroke-white" width="20"/>
             </button>
           </form>
         </div>
@@ -189,6 +189,8 @@
 </template>
 
 <script lang="ts" setup>
+import {Bookmark, Lock, Send, Trash2} from "lucide-vue-next";
+
 const comment = ref();
 const handleCommentSectionScroll = (event) => {
   const parentNode = event.target.parentNode;
