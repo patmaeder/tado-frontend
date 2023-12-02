@@ -53,11 +53,10 @@
 import {CheckCircle, XCircle} from "lucide-vue-next";
 
 const createNewBoardDialog = ref<HTMLDialogElement>();
-const createNewBoardDialogForm = ref();
-const {createBoard} = useTado();
+const createNewBoardDialogForm = ref<HTMLFormElement>();
 const title = ref('');
 const logo = ref();
-const description = ref('')
+const description = ref('');
 
 const handleFileUpload = (event) => {
   logo.value = event.target.files[0];
@@ -69,9 +68,9 @@ const validateAndSubmit = () => {
   let logoBase64;
   const reader = new FileReader();
   reader.onloadend = async () => {
-    logoBase64 = reader.result;
+    logoBase64 = reader.result as String;
 
-    const response = await createBoard({
+    const response = await tado.createBoard({
       title: title.value,
       description: description.value,
       logo: logoBase64
