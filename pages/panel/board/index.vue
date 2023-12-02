@@ -1,15 +1,12 @@
 <template>
-  <NuxtLayout name="panel-boards">
+  <NuxtLayout name="panel">
   </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
-const {getBoards} = useTado();
-const boards = await getBoards();
+const {data: boards, pending} = tado.getBoards();
 
-if (boards.value.length > 0) {
-  navigateTo(`/panel/board/${ boards.value[0].id }/inbox`);
-} else {
-  navigateTo("/");
-}
+watch(pending, () => {
+  if (!pending.value) navigateTo(`/panel/board/${ boards.value[0].id }/inbox`);
+})
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="panel-boards-inbox">
+  <NuxtLayout name="panel">
   </NuxtLayout>
 </template>
 
