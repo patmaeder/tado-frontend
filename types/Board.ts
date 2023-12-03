@@ -6,7 +6,8 @@ type Board = {
     appearance: 'LIGHT' | 'DARK',
     accentColor: String,
     tenant: String,
-    createdAt: Date,
     upvotes: Number,
     unread: Boolean
+    createdAt: Date,
+    updatedAt: Date,
 }

@@ -1,0 +1,3 @@
+type CommentDTO = {
+    message?: String,
+}
