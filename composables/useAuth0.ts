@@ -1,11 +1,11 @@
 import {Auth0Client, type Auth0ClientOptions, createAuth0Client, User} from '@auth0/auth0-spa-js';
 
 export const useAuth0 = () => {
-    let client = useState<Auth0Client>('client');
-    let isInitialized = useState<Boolean>('clientInitialized', () => false);
-    let user = useState<User>('user');
-    let isAuthenticated = useState<Boolean>('userIsAuthenticated');
-    let accessToken = useState<String>('accessToken');
+    let client = useState<Auth0Client>('auth0:client');
+    let isInitialized = useState<Boolean>('auth0:clientInitialized', () => false);
+    let user = useState<User>('auth0:user');
+    let isAuthenticated = useState<Boolean>('auth0:userIsAuthenticated');
+    let accessToken = useState<String>('auth0:accessToken');
 
     const init = (config: Auth0ClientOptions, autoRedirect = false) => {
         return new Promise(async (resolve, reject) => {
