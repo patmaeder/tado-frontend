@@ -47,7 +47,7 @@
 import {SortDesc} from "lucide-vue-next";
 
 const route = useRoute();
-const {data: board}: Board = tado.getBoard(route.params.boardId);
+const {data: board}: Board = await tado.getBoard(route.params.boardId);
 const suggestionsOrder = ref('MOST_UPVOTED');
 
 watch(suggestionsOrder, () => {

@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout name="panel-boards-inbox">
-    <div class=" h-full w-full flex flex-col gap-2 justify-center items-center -translate-y-16">
+    <div class="h-full w-full flex flex-col gap-2 justify-center items-center pr-20 -translate-y-16">
       <img alt='Illustration von zwei Personen, welche eine Option aus einer Liste mit mehreren Einträgen auswählen'
            src="/select-amico.svg"
            width="240"/>
