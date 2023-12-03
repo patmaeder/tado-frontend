@@ -5,14 +5,51 @@ export default class Tado {
     private static apiUrl = "http://localhost:8080"
 
     static getBoards() {
-        return this.fetchTado("boards", "/boards");
+        return this.fetchTado("/boards");
     }
 
     static getBoard(boardId: String) {
-        return this.fetchTado("board:" + boardId, "/boards/" + boardId);
+        return this.fetchTado("/boards/" + boardId);
     }
 
-    private static fetchTado(identifier: string, path: String, opts: NitroFetchOptions<string> = {}) {
+    static createBoard(boardDTO: BoardDTO) {
+        return this.fetchTado("/boards", {method: "POST", body: boardDTO});
+    }
+
+    static updateBoard(boardId: string, boardDTO: BoardDTO) {
+        return this.fetchTado("/boards/" + boardId, {method: "PATCH", body: boardDTO});
+    }
+
+    static deleteBoard(boardId: string) {
+        return this.fetchTado("/boards/" + boardId, {method: "DELETE"});
+    }
+
+    static getSuggestions(boardId: String) {
+        return this.fetchTado("/boards/" + boardId + "/suggestions");
+    }
+
+    static getSuggestion(suggestionId: String) {
+        return this.fetchTado("/suggestions/" + suggestionId);
+    }
+
+    static createSuggestion(suggestionDTO: SuggestionDTO) {
+        return this.fetchTado("/suggestions", {method: "POST", body: suggestionDTO});
+    }
+
+    static updateSuggestion(suggestionId, suggestionDTO: suggestionDTO) {
+        return this.fetchTado("/suggestions/" + suggestionId, {method: "PATCH", body: suggestionDTO});
+    }
+
+    static deleteSuggestion(suggestionId) {
+        return this.fetchTado("/suggestions/" + suggestionId, {method: "DELETE"});
+    }
+
+    static getComments(suggestionId: String) {
+        return this.fetchTado("/suggestions/" + suggestionId + "/comments")
+    }
+
+
+    private static fetchTado(path: String, opts: NitroFetchOptions<string> = {}) {
         const {isAuthenticated, accessToken} = useAuth0();
 
         // TODO: Throw error if unauthenticated
@@ -26,13 +63,6 @@ export default class Tado {
             Authorization: 'Bearer ' + accessToken.value
         }
 
-        const {data, pending} = useLazyAsyncData(
-            identifier,
-            () => $fetch(this.apiUrl + path, opts)
-        );
-
-        console.log(pending);
-
-        return {data, pending};
+        return useFetch(this.apiUrl + path, opts);
     }
 }
