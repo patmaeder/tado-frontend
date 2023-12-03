@@ -54,7 +54,7 @@
             </div>
 
             <!-- Suggestion List -->
-            <ul v-if="suggestions.length > 0">
+            <ul v-if="visibleSuggestions.length > 0">
               <li v-for="suggestion in visibleSuggestions" :key="suggestion.id"
                   :data-active="route.params.suggestionId == suggestion.id"
                   class="flex border-b border-gray-300 data-[active=true]:bg-white">
@@ -79,13 +79,21 @@
               <img alt='Illustration von zwei Personen mit Fragezeichen über dem Kopf'
                    src="/questions-amico.svg"
                    width="120"/>
-              <p class="mb-8 font-medium">Bisher wurden noch keine Vorschläge geteilt.</p>
-              <p class="flex flex-col gap-2 text-gray-600 text-center text-sm">
-                <span>Nutzer können über folgenden Link öffentlich Vorschläge teilen:</span>
-                <a :href="`http://localhost:3000/${route.params.boardId}`" class="underline">http://localhost:3000/{{
-                    route.params.boardId
-                  }}</a>
-              </p>
+              <template v-if="suggestions.length > 0">
+                <p class="mb-8 font-medium">Keine Ergebnisse</p>
+                <p class="flex flex-col gap-2 text-gray-600 text-center text-sm">
+                  <span>Suchen Sie nach einem anderen Schlagwort oder ändern Sie die Kategorie links</span>
+                </p>
+              </template>
+              <template v-else>
+                <p class="mb-8 font-medium">Bisher wurden noch keine Vorschläge geteilt.</p>
+                <p class="flex flex-col gap-2 text-gray-600 text-center text-sm">
+                  <span>Nutzer können über folgenden Link öffentlich Vorschläge teilen:</span>
+                  <a :href="`http://localhost:3000/${route.params.boardId}`" class="underline">http://localhost:3000/{{
+                      route.params.boardId
+                    }}</a>
+                </p>
+              </template>
             </div>
           </div>
 
