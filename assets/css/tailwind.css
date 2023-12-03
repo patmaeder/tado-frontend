@@ -12,10 +12,6 @@
     direction: rtl;
 }
 
-#panel .wrapper {
-    @apply px-20
-}
-
 /* Loader Autentication Guard */
 #loadingScreen {
     display: inline-block;
