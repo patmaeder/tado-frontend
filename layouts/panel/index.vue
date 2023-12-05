@@ -1,9 +1,10 @@
 <template>
-  <div id="panel" class="h-screen max-h-screen w-full flex flex-col overflow-hidden">
+  <NuxtLayout name="panel-blank">
 
     <!-- Panel Header -->
     <div>
-      <header class="grid grid-cols-12 grid-rows-1 items-center h-20 px-20 flex-shrink-0 border-b border-gray-300">
+      <header
+          class="grid grid-cols-12 grid-rows-1 items-center h-20 px-20 flex-shrink-0 bg-white border-b border-gray-300">
         <div class="col-span-3">
           <img alt="Tado Logo" class="h-10" height="40" src="/tado_logo.svg"/>
         </div>
@@ -30,12 +31,12 @@
                   </NuxtLink>
                 </li>
                 <li>
-                  <button
+                  <NuxtLink
                       class="w-full h-14 flex gap-2 items-center justify-center text-white bg-secondary hover:bg-secondary-800 rounded-md"
-                      @click="showCreateNewBoardDialog">
+                      to="/panel/board/new">
                     <span>Board erstellen</span>
                     <Plus height="16"/>
-                  </button>
+                  </NuxtLink>
                 </li>
               </ul>
             </div>
@@ -65,8 +66,8 @@
     </div>
 
     <slot></slot>
-  </div>
-  <LazyCreateNewBoardDialog/>
+
+  </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
@@ -77,13 +78,8 @@ const {user, logout} = useAuth0();
 const {data: boards} = await tado.getBoards();
 const {data: board} = await tado.getBoard(route.params.boardId);
 const dropdownMenu = ref<HTMLDialogElement>();
-const createNewBoardDialog = ref<HTMLDialogElement>();
 
 const toggleDropdownMenu = () => {
   dropdownMenu.value?.open ? dropdownMenu.value?.close() : dropdownMenu.value?.show();
-}
-
-const showCreateNewBoardDialog = () => {
-  createNewBoardDialog.value?.showModal();
 }
 </script>

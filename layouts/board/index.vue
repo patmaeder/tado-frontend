@@ -36,7 +36,7 @@ if (process.client) {
     clientId: "vDvSLgMRfXgDUhyPH6KnLIiYnmdNLDYl",
     cacheLocation: "localstorage",
     authorizationParams: {
-      redirect_uri: "http://localhost:3000/redirect?boardId=" + route.params.boardId,
+      redirect_uri: "http://localhost:3000/redirect?origin=" + route.path,
       audience: "https://www.tado.com"
     }
   })
