@@ -12,6 +12,20 @@
     direction: rtl;
 }
 
+.animate-drain {
+    animation-name: drain;
+    animation-duration: attr(data-duration number, 5000) 'ms';
+}
+
+@keyframes drain {
+    0% {
+        width: 100%
+    }
+    100% {
+        width: 0
+    }
+}
+
 /* Loader Autentication Guard */
 #loadingScreen {
     display: inline-block;
