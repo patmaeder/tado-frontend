@@ -1,4 +1,10 @@
-import {Auth0Client, type Auth0ClientOptions, createAuth0Client, User} from '@auth0/auth0-spa-js';
+import {
+    Auth0Client,
+    type Auth0ClientOptions,
+    createAuth0Client,
+    type RedirectLoginOptions,
+    User
+} from '@auth0/auth0-spa-js';
 
 export const useAuth0 = () => {
     let client = useState<Auth0Client>('auth0:client');
@@ -20,8 +26,8 @@ export const useAuth0 = () => {
 
             isAuthenticated.value = await client.value.isAuthenticated();
 
-            user.value = await client.value.getUser();
             if (isAuthenticated.value) {
+                user.value = await client.value.getUser() as User;
                 accessToken.value = await client.value.getTokenSilently();
             }
 
@@ -31,9 +37,9 @@ export const useAuth0 = () => {
         })
     }
 
-    const login = () =>
+    const login = (opts?: RedirectLoginOptions) =>
         new Promise((resolve, reject) => {
-            client?.value?.loginWithRedirect();
+            client?.value?.loginWithRedirect(opts);
         })
 
     const logout = (redirectUrl: string) =>

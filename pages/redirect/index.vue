@@ -2,7 +2,5 @@
 
 <script lang="ts" setup>
 const route = useRoute();
-
-if (route.query.boardId)
-  navigateTo("/" + route.query.boardId + route.fullPath.substring(route.fullPath.indexOf("?")))
+navigateTo(route.query.origin + route.fullPath.substring(route.fullPath.indexOf("?")))
 </script>
