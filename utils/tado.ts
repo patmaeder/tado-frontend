@@ -1,55 +1,60 @@
 import {type NitroFetchOptions} from "nitropack";
+import type {AsyncData} from "#app";
+import {FetchError} from "ofetch";
 
 export default class Tado {
 
     private static apiUrl = "http://localhost:8080"
 
     static getBoards() {
-        return this.fetchTado("/boards");
+        return this.fetchTado<Board[]>("/boards");
     }
 
     static getBoard(boardId: String) {
-        return this.fetchTado("/boards/" + boardId);
+        return this.fetchTado<Board>("/boards/" + boardId);
     }
 
     static createBoard(boardDTO: BoardDTO) {
-        return this.fetchTado("/boards", {method: "POST", body: boardDTO});
+        return this.fetchTado<Board>("/boards", {method: "POST", body: boardDTO});
     }
 
     static updateBoard(boardId: string, boardDTO: BoardDTO) {
-        return this.fetchTado("/boards/" + boardId, {method: "PATCH", body: boardDTO});
+        return this.fetchTado<Board>("/boards/" + boardId, {method: "PATCH", body: boardDTO});
     }
 
     static deleteBoard(boardId: string) {
-        return this.fetchTado("/boards/" + boardId, {method: "DELETE"});
+        return this.fetchTado<void>("/boards/" + boardId, {method: "DELETE"});
     }
 
     static getSuggestions(boardId: String) {
-        return this.fetchTado("/boards/" + boardId + "/suggestions");
+        return this.fetchTado<Suggestion[]>("/boards/" + boardId + "/suggestions");
     }
 
     static getSuggestion(suggestionId: String) {
-        return this.fetchTado("/suggestions/" + suggestionId);
+        return this.fetchTado<Suggestion>("/suggestions/" + suggestionId);
     }
 
     static createSuggestion(suggestionDTO: SuggestionDTO) {
-        return this.fetchTado("/suggestions", {method: "POST", body: suggestionDTO});
+        return this.fetchTado<Suggestion>("/suggestions", {method: "POST", body: suggestionDTO});
     }
 
-    static updateSuggestion(suggestionId, suggestionDTO: suggestionDTO) {
-        return this.fetchTado("/suggestions/" + suggestionId, {method: "PATCH", body: suggestionDTO});
+    static updateSuggestion(suggestionId: String, suggestionDTO: SuggestionDTO) {
+        return this.fetchTado<Suggestion>("/suggestions/" + suggestionId, {method: "PATCH", body: suggestionDTO});
     }
 
-    static deleteSuggestion(suggestionId) {
-        return this.fetchTado("/suggestions/" + suggestionId, {method: "DELETE"});
+    static deleteSuggestion(suggestionId: String) {
+        return this.fetchTado<void>("/suggestions/" + suggestionId, {method: "DELETE"});
     }
 
     static getComments(suggestionId: String) {
-        return this.fetchTado("/suggestions/" + suggestionId + "/comments")
+        return this.fetchTado<Comment[]>("/suggestions/" + suggestionId + "/comments")
     }
 
+    static createComment(commentDTO: CommentDTO) {
+        return this.fetchTado<Comment>("/comments", {method: "POST", body: commentDTO})
+    }
 
-    private static fetchTado(path: String, opts: NitroFetchOptions<string> = {}) {
+    private static fetchTado<T>(path: String, opts: NitroFetchOptions<string> = {}) {
         const {isAuthenticated, accessToken} = useAuth0();
 
         // TODO: Throw error if unauthenticated
@@ -63,6 +68,6 @@ export default class Tado {
             Authorization: 'Bearer ' + accessToken.value
         }
 
-        return useFetch(this.apiUrl + path, opts);
+        return useFetch(this.apiUrl + path, opts) as AsyncData<T, FetchError<any> | null>;
     }
 }
