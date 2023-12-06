@@ -1,4 +1,5 @@
 type BoardDTO = {
+    id?: String,
     logo?: String,
     title?: String,
     description?: String,
