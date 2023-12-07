@@ -1,4 +1,4 @@
-export const getElapsedTimeSinceCreationDate = (date: Date) => {
+export default (date: Date) => {
     const createdAt = new Date(date);
     const now = new Date();
 
