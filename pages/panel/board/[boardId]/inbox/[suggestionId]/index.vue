@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="panel-boards-inbox">
+  <NuxtLayout name="panel-board-inbox">
     <div class="flex flex-col h-full">
 
       <div class="flex-shrink-0 flex items-center h-20 pl-4 pr-20 border-b border-gray-300">
@@ -7,15 +7,16 @@
           <Trash2 width="20"/>
           <span>Löschen</span>
         </button>
-        <button v-if="!suggestionPending && !suggestion.locked"
+        <button v-if="suggestion.locked" class="flex items-center gap-2 py-2 px-4 rounded hover:bg-gray-200"
+                @click="unlockSuggestion">
+          <Unlock width="20"/>
+          <span>Öffnen</span>
+        </button>
+        <button v-else
                 class="flex items-center gap-2 py-2 px-4 rounded hover:bg-gray-200"
                 @click="lockSuggestion">
           <Lock width="20"/>
           <span>Schließen</span>
-        </button>
-        <button v-else class="flex items-center gap-2 py-2 px-4 rounded hover:bg-gray-200" @click="unlockSuggestion">
-          <Unlock width="20"/>
-          <span>Öffnen</span>
         </button>
         <button class="flex items-center gap-2 py-2 px-4 rounded hover:bg-gray-200" @click="chooseCategory">
           <Bookmark width="20"/>
@@ -23,12 +24,11 @@
         </button>
       </div>
 
-      <div v-if="!suggestionPending && suggestion.locked" class="w-full p-2 bg-primary-100 text-primary text-sm">
+      <div v-if="suggestion.locked" class="w-full p-2 bg-primary-100 text-primary text-sm">
         <p>Dieser Beitrag wurde geschlossen und kann nicht mehr kommentiert werden.</p>
       </div>
 
-      <div v-if="!suggestionPending"
-           class="flex-grow relative flex flex-col h-full p-10 pr-[7.5rem] bg-white overflow-hidden">
+      <div class="flex-grow relative flex flex-col h-full p-10 pr-[7.5rem] bg-white overflow-hidden">
         <div class="flex-shrink-0">
           <div class="flex justify-between">
             <h1 class="text-xl font-medium">{{ suggestion.title }}</h1>
@@ -50,10 +50,9 @@
                     after:absolute data-[after=hidden]:after:hidden after:bottom-0 after:left-0 after:w-full after:h-20 after:bg-gradient-to-t after:from-white after:to-transparent after:z-10"
              data-after="true" data-before="hidden">
 
-          <div class="ml-6 mt-6 border-l border-gray-300">
-            <div v-if="!commentsPending" class="relative h-full pl-6 overflow-scroll"
-                 @scroll="handleCommentSectionScroll">
-              <div v-for="comment in comments"
+          <div class="h-full overflow-y-auto" @scroll="handleCommentSectionScroll">
+            <div class="relative ml-6 mt-6 pl-6 border-l border-gray-300">
+              <div v-for="comment in comments.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1)"
                    class="py-6 before:absolute before:left-0 before:translate-y-3 before:h-px before:w-4 before:bg-gray-300">
                 <p class="leading-relaxed max-w-[84%]">{{ comment.message }}</p>
                 <div class="flex gap-2 mt-3 text-gray-600">
@@ -71,10 +70,10 @@
         </div>
 
         <div class="flex-shrink-0 mt-8">
-          <form class="flex items-end gap-4" @submit.prevent="() => {}">
+          <form class="flex items-end gap-4" @submit.prevent="comment">
             <!-- TODO: Resize textarea to auto fit content -->
             <textarea
-                v-model="comment"
+                v-model="commentary"
                 :disabled="suggestion?.locked"
                 class="flex-grow h-12 pl-6 py-2.5 rounded bg-gray-100 outline-none placeholder-gray-500 disabled:placeholder-gray-300"
                 placeholder="Kommentieren..."></textarea>
@@ -92,12 +91,27 @@
 </template>
 
 <script lang="ts" setup>
-import {Bookmark, Lock, Send, Trash2, Unlock} from "lucide-vue-next";
+import {Bookmark, Lock, MessageSquare, Send, Trash2, Unlock, XCircle} from "lucide-vue-next";
 
 const route = useRoute();
-const {data: suggestion, pending: suggestionPending} = await tado.getSuggestion(route.params.suggestionId);
-const {data: comments, pending: commentsPending} = await tado.getComments(route.params.suggestionId);
-const comment = ref();
+const {showNotification} = useToastNotifications();
+// TODO: v-if is pending entfernen, um Blackout zu vermeiden
+const {
+  data: suggestion,
+  pending: suggestionPending,
+  refresh: refreshSuggestion
+} = await tado.getSuggestion(route.params.suggestionId as string);
+const {
+  data: comments,
+  pending: commentsPending,
+  refresh: refreshComments
+} = await tado.getComments(route.params.suggestionId as string);
+const commentary = ref();
+
+onMounted(async () => {
+  if (suggestion.value.unread)
+    await tado.updateSuggestion(route.params.suggestionId as string, {unread: false});
+})
 
 const handleCommentSectionScroll = (event) => {
   const parentNode = event.target.parentNode;
@@ -109,24 +123,122 @@ const handleCommentSectionScroll = (event) => {
   parentNode.setAttribute("data-after", scrollHeight - clientHeight - scrollTop < 10 ? "hidden" : "visible");
 }
 
-const deleteSuggestion = () => {
-  tado.deleteSuggestion(route.params.suggestionId);
+const deleteSuggestion = async () => {
+  const {error} = await tado.deleteSuggestion(route.params.suggestionId as string);
+
+  if (error.value != null) {
+    showNotification({
+      icon: XCircle,
+      title: error.value.name,
+      message: error.value.message,
+      type: "BANNER",
+      status: "ERROR",
+      duration: 5000
+    })
+    return;
+  }
+
+  navigateTo(`/panel/board/${ route.params.boardId }/inbox`);
+  showNotification({
+    icon: Trash2,
+    message: "Beitrag wurde erfolgreich gelöschen.",
+    type: "BANNER",
+    status: "SUCCESS",
+    duration: 5000
+  })
 }
 
-const lockSuggestion = () => {
-  tado.updateSuggestion(route.params.suggestionId, {
-    locked: true
-  });
+const lockSuggestion = async () => {
+  const {error} = await tado.updateSuggestion(route.params.suggestionId as string, {locked: true});
+
+  if (error.value != null) {
+    showNotification({
+      icon: XCircle,
+      title: error.value.name,
+      message: error.value.message,
+      type: "BANNER",
+      status: "ERROR",
+      duration: 5000
+    })
+    return;
+  }
+
+  await refreshSuggestion();
+  showNotification({
+    icon: Lock,
+    message: "Beitrag wurde erfolgreich geschlossen.",
+    type: "BANNER",
+    status: "SUCCESS",
+    duration: 5000
+  })
 }
 
-const unlockSuggestion = () => {
-  tado.updateSuggestion(route.params.suggestionId, {
-    locked: false
-  });
+const unlockSuggestion = async () => {
+  const {error} = await tado.updateSuggestion(route.params.suggestionId as string, {locked: false});
+
+  if (error.value != null) {
+    showNotification({
+      icon: XCircle,
+      title: error.value.name,
+      message: error.value.message,
+      type: "BANNER",
+      status: "ERROR",
+      duration: 5000
+    })
+    return;
+  }
+
+  await refreshSuggestion();
+  showNotification({
+    icon: Unlock,
+    message: "Beitrag wurde erfolgreich geöffnet.",
+    type: "BANNER",
+    status: "SUCCESS",
+    duration: 5000
+  })
 }
 
 const chooseCategory = () => {
   console.log("Choose Category");
   // TODO: Dialog zur Kategorieauswahl einblenden
+}
+
+const comment = async () => {
+
+  // TODO: Don't rerender entire comment tree when posting new comment
+
+  if (!(commentary.value.trim().length > 0)) {
+    // TODO: Error anzeigen
+    return;
+  }
+
+  const {error} = await tado.createComment({
+    message: commentary.value,
+    suggestion: {
+      id: route.params.suggestionId as String
+    },
+  })
+
+  if (error.value != null) {
+    showNotification({
+      icon: XCircle,
+      title: error.value.name,
+      message: error.value.message,
+      type: "BANNER",
+      status: "ERROR",
+      duration: 5000
+    })
+    return;
+  }
+
+  commentary.value = "";
+  await refreshComments();
+  showNotification({
+    icon: MessageSquare,
+    message: "Kommentar erfolgreich geteilt.",
+    type: "BANNER",
+    status: "SUCCESS",
+    duration: 5000
+  })
 }
 </script>
