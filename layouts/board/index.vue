@@ -4,13 +4,13 @@
       <div class="w-full flex justify-end p-6">
         <ClientOnly>
           <div v-if="isAuthenticated" class="flex items center">
-            <span>{{ user?.email }}</span>
+            <span>{{ user.email }}</span>
             <button class="ml-3 pl-2 border-l border-gray-300"
-                    @click="() => { logout('http://localhost:3000/redirect?boardId=' + route.params.boardId)}">
+                    @click="logoutUser">
               <LogOut height="16"/>
             </button>
           </div>
-          <button v-else class="font-medium" @click="login">Einloggen</button>
+          <button v-else class="font-medium" @click="loginUser">Einloggen</button>
         </ClientOnly>
       </div>
       <div class="px-72 pb-16">
@@ -36,13 +36,23 @@ if (process.client) {
     clientId: "vDvSLgMRfXgDUhyPH6KnLIiYnmdNLDYl",
     cacheLocation: "localstorage",
     authorizationParams: {
-      redirect_uri: "http://localhost:3000/redirect?origin=" + route.path,
       audience: "https://www.tado.com"
     }
   })
+}
 
-  if (location.search.includes("boardId=")) {
-    window.history.replaceState({}, document.title, window.location.href.split('?')[0]);
-  }
+const loginUser = async () => {
+  route.query["origin"] = route.path;
+
+  await login({
+    authorizationParams: {
+      redirect_uri: "http://localhost:3000/redirect?origin=" + route.path,
+    }
+  });
+}
+
+const logoutUser = async () => {
+  route.query["origin"] = route.path;
+  await logout('http://localhost:3000/redirect?origin=' + route.path);
 }
 </script>

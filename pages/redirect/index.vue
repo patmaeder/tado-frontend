@@ -1,6 +1,7 @@
-<template></template>
-
 <script lang="ts" setup>
 const route = useRoute();
-navigateTo(route.query.origin + route.fullPath.substring(route.fullPath.indexOf("?")))
+const origin = route.query["origin"];
+delete route.query["origin"];
+
+navigateTo(origin + "?" + LocationQueryToString(route.query));
 </script>

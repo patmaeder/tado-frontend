@@ -4,8 +4,6 @@
 </template>
 
 <script lang="ts" setup>
-const {data: boards, pending} = await tado.getBoards();
-
-if (!pending.value)
-  navigateTo(`/panel/board/${ boards.value[0].id }/inbox`);
+const {data: boards} = await tado.getBoards();
+navigateTo(`/panel/board/${ boards.value[0].id }/inbox`);
 </script>

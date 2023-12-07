@@ -75,8 +75,8 @@ import {ChevronDown, LogOut, Plus, User} from "lucide-vue-next";
 
 const route = useRoute();
 const {user, logout} = useAuth0();
-const {data: boards} = await tado.getBoards();
-const {data: board} = await tado.getBoard(route.params.boardId);
+const {data: boards, error: error} = await tado.getBoards();
+const board = boards.value.find((board: Board) => board.id == route.params.boardId);
 const dropdownMenu = ref<HTMLDialogElement>();
 
 const toggleDropdownMenu = () => {

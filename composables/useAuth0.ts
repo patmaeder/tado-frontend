@@ -13,6 +13,7 @@ export const useAuth0 = () => {
     let isAuthenticated = useState<Boolean>('auth0:userIsAuthenticated');
     let accessToken = useState<String>('auth0:accessToken');
 
+    // TODO: When error (email not verified), redirect user and display error
     const init = (config: Auth0ClientOptions, autoRedirect = false) => {
         return new Promise(async (resolve, reject) => {
             if (process.server) reject("Auth0Client can only be initialized clientside");
