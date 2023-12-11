@@ -1,5 +1,4 @@
-import {type NitroFetchOptions} from "nitropack";
-import type {AsyncData} from "#app";
+import type {AsyncData, UseFetchOptions} from "#app";
 import {FetchError} from "ofetch";
 
 export default class Tado {
@@ -54,18 +53,21 @@ export default class Tado {
         return this.fetchTado<Comment>("/comments", {method: "POST", body: commentDTO})
     }
 
-    private static fetchTado<T>(path: String, opts: NitroFetchOptions<string> = {}) {
+    static getCategories(boardId: String) {
+        return this.fetchTado<Category[]>("/boards/" + boardId + "/categories");
+    }
+
+    private static fetchTado<T>(path: String, opts: UseFetchOptions<string> = {}) {
         const {isAuthenticated, accessToken} = useAuth0();
 
-        // TODO: Throw error if unauthenticated
-        // if (isAuthenticated.value == undefined) reject("User is not authenticated");
+        if (!opts.headers) opts.headers = {};
+        if (isAuthenticated.value) { // @ts-ignore
+            opts.headers.Authorization = 'Bearer ' + accessToken.value;
+        }
 
-        if (opts == undefined) opts = {};
-        if (!opts.headers) opts['headers'] = {} as HeadersInit;
         opts.headers = {
             ...opts.headers,
             'Access-Control-Allow-Origin': '*',
-            Authorization: 'Bearer ' + accessToken.value
         }
 
         return useFetch(this.apiUrl + path, opts) as AsyncData<T, FetchError<any> | null>;
