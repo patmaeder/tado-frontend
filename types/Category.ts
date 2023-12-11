@@ -1,6 +1,6 @@
 type Category = {
     id: String,
-    label: String,
+    title: String,
     color: String,
     createdAt: Date,
     updatedAt: Date,
