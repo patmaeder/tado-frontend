@@ -57,23 +57,49 @@ const updateTitle = async () => {
   let {error} = await tado.updateBoard(route.params.boardId as string, {title: title.value.trim()});
 
   if (error.value != null) {
-    showNotification({icon: XCircle, title: error.value.name, message: error.value.message, type: "BANNER", status: "ERROR", duration: 5000})
+    showNotification({
+      icon: XCircle,
+      title: error.value.name,
+      message: error.value.message,
+      type: "BANNER",
+      status: "ERROR",
+      duration: 5000
+    })
     return;
   }
 
   await refresh();
-  showNotification({icon: Info, message: "Board wurde erfolgreich umbenannt", type: "BANNER", status: "SUCCESS", duration: 5000})
+  showNotification({
+    icon: Info,
+    message: "Board wurde erfolgreich umbenannt",
+    type: "BANNER",
+    status: "SUCCESS",
+    duration: 5000
+  })
 }
 
 const deleteBoard = async () => {
   const {error} = await tado.deleteBoard(route.params.boardId as string);
 
   if (error.value != null) {
-    showNotification({icon: XCircle, title: error.value.name, message: error.value.message, type: "BANNER", status: "ERROR", duration: 5000})
+    showNotification({
+      icon: XCircle,
+      title: error.value.name,
+      message: error.value.message,
+      type: "BANNER",
+      status: "ERROR",
+      duration: 5000
+    })
     return;
   }
 
   navigateTo("/panel")
-  showNotification({icon: Trash2, message: "Board wurde erfolgreich gelöscht.", type: "BANNER", status: "SUCCESS", duration: 5000})
+  showNotification({
+    icon: Trash2,
+    message: "Board wurde erfolgreich gelöscht.",
+    type: "BANNER",
+    status: "SUCCESS",
+    duration: 5000
+  })
 }
 </script>
