@@ -1,4 +1,5 @@
 type CategoryDTO = {
-    title: String,
-    color: String,
+    id?: String
+    title?: String,
+    color?: String,
 }
