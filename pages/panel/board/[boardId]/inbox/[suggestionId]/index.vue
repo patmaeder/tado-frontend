@@ -18,7 +18,8 @@
           <Lock width="20"/>
           <span>Schließen</span>
         </button>
-        <button class="flex items-center gap-2 py-2 px-4 rounded hover:bg-gray-200" @click="chooseCategory">
+        <button class="flex items-center gap-2 py-2 px-4 rounded hover:bg-gray-200"
+                @click="() => {chooseCategoryDialog?.showModal()}">
           <Bookmark width="20"/>
           <span>Kategorie auswählen</span>
         </button>
@@ -30,7 +31,7 @@
 
       <div class="flex-grow relative flex flex-col h-full p-10 pr-[7.5rem] bg-white overflow-hidden">
         <div class="flex-shrink-0">
-          <div class="flex justify-between">
+          <div class="flex justify-between items-center">
             <h1 class="text-xl font-medium">{{ suggestion.title }}</h1>
             <span
                 class="flex items-center px-4 text-primary bg-primary-100 rounded-full before:w-0 before:h-0 before:border-b-[10px] before:border-b-primary before:border-l-8 before:border-l-transparent before:border-r-8 before:border-r-transparent before:scale-x-75 before:-translate-x-1">32</span>
@@ -39,8 +40,11 @@
             <span>Author</span>
             <span>·</span>
             <span>{{ getElapsedTimeSinceCreationDate(suggestion.createdAt) }}</span>
-            <span v-if="suggestion.category != null">·</span>
-            <span v-if="suggestion.category != null">{{ suggestion.category }}</span>
+            <template v-if="suggestion.category.title != '_all'">
+              <span>·</span>
+              <span :style="`background-color: ${suggestion.category.color}`"
+                    class="flex items-center px-2 text-white text-sm rounded">{{ suggestion.category.title }}</span>
+            </template>
           </div>
           <p class="max-w-[84%] mt-8 leading-relaxed">{{ suggestion.description }}</p>
         </div>
@@ -87,26 +91,58 @@
         </div>
       </div>
     </div>
+    <dialog ref="chooseCategoryDialog" class="w-96 p-8 rounded-md bg-white">
+      <fieldset>
+        <div class="max-h-96 w-full flex flex-col gap-4 overflow-y-scroll">
+          <label class="flex items-center gap-4 pb-4 border-b border-gray-200" for="chooseCategoryDialog_null">
+            <input id="chooseCategoryDialog_null"
+                   v-model="selectedCategory"
+                   :value="categories.find(x => x.title == '_all').id"
+                   class="peer appearance-none" name="chooseCategoryDialog" type="radio">
+            <span
+                class="inline-block w-[10px] h-[10px] border-2 border-white peer-checked:bg-gray-600 rounded-full outline outline-2 outline-gray-600"></span>
+            <span>Keine Kategorie</span>
+          </label>
+          <label v-for="category of categories.filter(x => x.title != '_all')" :key="category.id"
+                 :for="`chooseCategoryDialog_${category.id}`"
+                 class="flex items-center gap-4">
+            <input :id="`chooseCategoryDialog_${category.id}`" :checked="selectedCategory == category.id"
+                   class="peer appearance-none"
+                   name="chooseCategoryDialog" type="radio" @click="() => {selectedCategory = category.id}">
+            <span
+                class="inline-block w-[10px] h-[10px] border-2 border-white peer-checked:bg-gray-600 rounded-full outline outline-2 outline-gray-600"></span>
+            <span>{{ category.title }}</span>
+          </label>
+        </div>
+        <div class="flex gap-4 mt-6">
+          <button
+              class="basis-1/2 flex items-center justify-center py-2 bg-primary-100 disabled:bg-gray-200 text-primary disabled:text-gray-600 rounded"
+              @click="chooseCategory">
+            <Save height="16"/>
+            <span>Speichern</span>
+          </button>
+          <button class="basis-1/2 flex items-center justify-center py-2 bg-gray-100 text-gray-600 rounded"
+                  @click="chooseCategoryDialog?.close()">
+            <XCircle height="16"/>
+            <span>Abbrechen</span>
+          </button>
+        </div>
+      </fieldset>
+    </dialog>
   </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
-import {Bookmark, Lock, MessageSquare, Send, Trash2, Unlock, XCircle} from "lucide-vue-next";
+import {Bookmark, Lock, MessageSquare, Save, Send, Trash2, Unlock, XCircle} from "lucide-vue-next";
 
 const route = useRoute();
 const {showNotification} = useToastNotifications();
-// TODO: v-if is pending entfernen, um Blackout zu vermeiden
-const {
-  data: suggestion,
-  pending: suggestionPending,
-  refresh: refreshSuggestion
-} = await tado.getSuggestion(route.params.suggestionId as string);
-const {
-  data: comments,
-  pending: commentsPending,
-  refresh: refreshComments
-} = await tado.getComments(route.params.suggestionId as string);
+const {data: suggestion, refresh: refreshSuggestion} = await tado.getSuggestion(route.params.suggestionId as string);
+const {data: comments, refresh: refreshComments} = await tado.getComments(route.params.suggestionId as string);
+const {data: categories} = await tado.getCategories(route.params.boardId as string);
 const commentary = ref();
+const selectedCategory = ref<String>(suggestion.value.category.id);
+const chooseCategoryDialog = ref<HTMLDialogElement>();
 
 onMounted(async () => {
   if (suggestion.value.unread)
@@ -198,9 +234,37 @@ const unlockSuggestion = async () => {
   })
 }
 
-const chooseCategory = () => {
-  console.log("Choose Category");
-  // TODO: Dialog zur Kategorieauswahl einblenden
+const chooseCategory = async () => {
+  const {error} = await tado.updateSuggestion(route.params.suggestionId as string, {
+    category: {
+      id: selectedCategory.value
+    }
+  });
+
+  if (error.value != null) {
+    showNotification({
+      icon: XCircle,
+      title: error.value.name,
+      message: error.value.message,
+      type: "BANNER",
+      status: "ERROR",
+      duration: 5000
+    })
+    return;
+  }
+
+  chooseCategoryDialog.value?.close();
+  const {refresh: refreshSuggestions} = await tado.getSuggestions(route.params.boardId as String);
+  await refreshSuggestion();
+  await refreshSuggestions();
+
+  showNotification({
+    icon: Unlock,
+    message: "Kategorie wurde erfolgreich geändert.",
+    type: "BANNER",
+    status: "SUCCESS",
+    duration: 5000
+  })
 }
 
 const comment = async () => {
@@ -242,3 +306,9 @@ const comment = async () => {
   })
 }
 </script>
+
+<style scoped>
+dialog::backdrop {
+  background-color: rgb(0 0 0 / .8);
+}
+</style>

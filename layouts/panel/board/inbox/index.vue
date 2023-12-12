@@ -9,14 +9,23 @@
           <div class="max-h-full col-span-2 overflow-hidden">
             <div class="flex flex-col gap-4 max-h-full py-12 pr-8">
               <div class="flex-1 overflow-auto">
-                <div>
+                <div class="flex flex-col">
                   <legend hidden>Beiträge nach Kategorie filtern</legend>
                   <button
                       id="category_all"
                       :data-active="activeCategory == null ? 'true' : 'false'"
                       class="w-full min-h-[3rem] px-4 py-2 flex items-center rounded text-sm data-[active='true']:font-medium data-[active='true']:bg-gray-200"
                       @click="() => { activeCategory = null }">
-                    <span>Alle</span>
+                    <span class="text-base">Alle</span>
+                  </button>
+                  <button v-for="category in categories.filter(x => x.title != '_all')" :id="`category_${category.id}`"
+                          :key="category.id"
+                          :data-active="activeCategory == category.id ? 'true' : 'false'"
+                          class="w-full min-h-[3rem] px-4 py-2 flex items-center rounded text-sm data-[active='true']:font-medium data-[active='true']:bg-gray-200"
+                          @click="() => { activeCategory = category.id }">
+                    <span :style="`border-color: ${category.color}`"
+                          class="inline-block w-[10px] h-[10px] border-[3px] box-border rounded-full mr-2"></span>
+                    <span>{{ category.title }}</span>
                   </button>
                 </div>
               </div>
@@ -116,16 +125,17 @@
 import {Plus, Search, SortDesc} from "lucide-vue-next";
 
 const route = useRoute();
-const activeCategory = useState("inbox:activeCategory", () => null);
+const activeCategory = useState<null | String>("inbox:activeCategory", () => null);
 const suggestionsQuery = useState("inbox:suggestionsQuery", () => '');
 const suggestionsOrder = useState("inbox:suggestionsOrder", () => 'UNREAD');
+const {data: categories} = await tado.getCategories(route.params.boardId as String);
 const {data: suggestions} = await tado.getSuggestions(route.params.boardId as String);
 
-const visibleSuggestions = computed(() => {
+const visibleSuggestions = computed<Suggestion[]>(() => {
   let temp;
 
   if (activeCategory.value != null) {
-    temp = suggestions.value.filter(suggestion => suggestion.category.id == activeCategory.value)
+    temp = suggestions.value.filter(suggestion => suggestion.category != null && suggestion.category.id == activeCategory.value)
   } else {
     temp = suggestions.value;
   }
