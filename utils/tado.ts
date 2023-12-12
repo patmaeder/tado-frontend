@@ -3,7 +3,7 @@ import {FetchError} from "ofetch";
 
 export default class Tado {
 
-    private static apiUrl = "http://localhost:8080"
+    private static apiUrl = useRuntimeConfig().public.serverUrl;
 
     static getBoards() {
         return this.fetchTado<Board[]>("/boards");

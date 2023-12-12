@@ -1,5 +1,6 @@
 <template>
-  <div v-if="viewportToSmall" class="w-full h-screen flex flex-col items-center justify-center text-white bg-secondary">
+  <div v-if="viewportToSmall"
+       class="w-full h-screen flex flex-col items-center justify-center text-white bg-secondary z-50">
     <div class="max-w-3xl">
       <p class="mb-8 text-center leading-relaxed text-lg">Die Ansicht des Panels ist nicht für mobile Endgeräte bzw. für
         einen zu kleinen Bildausschnitt optimiert. Daher

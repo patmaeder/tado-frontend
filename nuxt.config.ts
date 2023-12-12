@@ -1,11 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     devtools: {
-      enabled: true,
+        enabled: true,
 
-      timeline: {
-        enabled: true
-      }
+        timeline: {
+            enabled: true
+        }
     },
     modules: ['@nuxtjs/tailwindcss'],
     tailwindcss: {
@@ -14,5 +14,10 @@ export default defineNuxtConfig({
     },
     routeRules: {
         '/panel/**': {ssr: false}
+    },
+    runtimeConfig: {
+        public: {
+            serverUrl: process.env.SERVER_URL
+        }
     }
 })
