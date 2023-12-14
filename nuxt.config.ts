@@ -15,9 +15,4 @@ export default defineNuxtConfig({
     routeRules: {
         '/panel/**': {ssr: false}
     },
-    runtimeConfig: {
-        public: {
-            serverUrl: process.env.SERVER_URL
-        }
-    }
 })

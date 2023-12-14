@@ -3,7 +3,7 @@ import {FetchError} from "ofetch";
 
 export default class Tado {
 
-    private static apiUrl = useRuntimeConfig().public.serverUrl;
+    private static apiUrl = process.env.SERVER_URL;
 
     static getBoards() {
         return this.fetchTado<Board[]>("/boards");
@@ -59,6 +59,14 @@ export default class Tado {
 
     private static fetchTado<T>(path: String, opts: UseFetchOptions<string> = {}) {
         const {isAuthenticated, accessToken} = useAuth0();
+
+        if (this.apiUrl == undefined) {
+            throw createError({
+                statusCode: 500,
+                fatal: true,
+                statusMessage: 'Defective server configuration. This problem won\'t be resolved by reloading the page. We apologize for the inconvenience.',
+            })
+        }
 
         if (!opts.headers) opts.headers = {};
         if (isAuthenticated.value) { // @ts-ignore
