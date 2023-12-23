@@ -2,7 +2,6 @@
 export default defineNuxtConfig({
     devtools: {
         enabled: true,
-
         timeline: {
             enabled: true
         }
@@ -15,4 +14,9 @@ export default defineNuxtConfig({
     routeRules: {
         '/panel/**': {ssr: false}
     },
+    runtimeConfig: {
+        public: {
+            serverUrl: process.env.SERVER_URL
+        }
+    }
 })

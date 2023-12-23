@@ -2,20 +2,18 @@
   <div class="min-h-screen bg-slate-100 overflow-y-auto">
     <header class="w-full bg-white">
       <div class="w-full flex justify-end p-6">
-        <ClientOnly>
-          <div v-if="isAuthenticated" class="flex items center">
-            <span>{{ user.email }}</span>
-            <button class="ml-3 pl-2 border-l border-gray-300"
-                    @click="logoutUser">
-              <LogOut height="16"/>
-            </button>
-          </div>
-          <button v-else class="font-medium" @click="loginUser">Einloggen</button>
-        </ClientOnly>
+        <div v-if="isAuthenticated" class="flex items center">
+          <span>{{ user.email }}</span>
+          <button class="ml-3 pl-2 border-l border-gray-300"
+                  @click="logoutUser">
+            <LogOut height="16"/>
+          </button>
+        </div>
+        <button v-else class="font-medium" @click="loginUser">Einloggen</button>
       </div>
       <div class="px-72 pb-16">
         <img :alt="board.title + ' Logo'" :src="board.logo" class="h-16 mb-6">
-        <p class="w-2/3 text-base leading-relaxed">{{ board?.description }}</p>
+        <p class="w-2/3 text-base leading-relaxed">{{ board.description }}</p>
       </div>
     </header>
 
@@ -78,6 +76,7 @@ const {init, user, isAuthenticated, login, logout} = useAuth0();
 const {data: board, error: boardError} = await tado.getBoard(route.params.boardId as String);
 const {data: suggestions, error: suggestionsError} = await tado.getSuggestions(route.params.boardId as String)
 const suggestionsOrder = ref('MOST_UPVOTED');
+
 
 watch(suggestionsOrder, () => {
   switch (suggestionsOrder.value) {

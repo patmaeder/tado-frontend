@@ -3,7 +3,7 @@ import {FetchError} from "ofetch";
 
 export default class Tado {
 
-    private static apiUrl = process.env.SERVER_URL;
+    static apiUrl: undefined | string = undefined;
 
     static getBoards() {
         return this.fetchTado<Board[]>("/boards");
@@ -62,7 +62,7 @@ export default class Tado {
 
         if (this.apiUrl == undefined) {
             throw createError({
-                statusCode: 500,
+                statusCode: 400,
                 fatal: true,
                 statusMessage: 'Defective server configuration. This problem won\'t be resolved by reloading the page. We apologize for the inconvenience.',
             })
