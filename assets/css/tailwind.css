@@ -8,9 +8,23 @@
     font-size: 14px;
 }
 
+html {
+    scrollbar-gutter: stable both-edges;
+    scroll-behavior: smooth;
+}
+
+html:has(dialog[open]) {
+    overflow: hidden;
+}
+
 .direction-rtl {
     direction: rtl;
 }
+
+.bg-accent-50 {
+    background-color: color-mix(in srgb, var(--clr-accent) 50%, transparent);
+}
+
 
 .animate-drain {
     animation-name: drain;

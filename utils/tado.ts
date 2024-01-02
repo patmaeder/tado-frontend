@@ -45,6 +45,14 @@ export default class Tado {
         return this.fetchTado<void>("/suggestions/" + suggestionId, {method: "DELETE"});
     }
 
+    static upvoteSuggestion(suggestionId: String) {
+        return this.fetchTado<Upvote>("/suggestions/" + suggestionId + "/upvote")
+    }
+
+    static unvoteSuggestion(suggestionId: String) {
+        return this.fetchTado<void>("/suggestions/" + suggestionId + "/unvote")
+    }
+
     static getComments(suggestionId: String) {
         return this.fetchTado<Comment[]>("/suggestions/" + suggestionId + "/comments")
     }
@@ -55,6 +63,10 @@ export default class Tado {
 
     static getCategories(boardId: String) {
         return this.fetchTado<Category[]>("/boards/" + boardId + "/categories");
+    }
+
+    static getUpvotes() {
+        return this.fetchTado<String[]>("/upvotes");
     }
 
     private static fetchTado<T>(path: String, opts: UseFetchOptions<string> = {}) {

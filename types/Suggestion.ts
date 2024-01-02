@@ -5,7 +5,7 @@ type Suggestion = {
     category: Category,
     locked: Boolean,
     unread: Boolean,
-    upvotes: Number,
+    upvoteCount: number,
     createdAt: Date,
     updatedAt: Number,
 }
