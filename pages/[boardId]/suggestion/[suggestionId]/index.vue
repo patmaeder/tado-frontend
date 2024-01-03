@@ -1,8 +1,10 @@
 <template>
   <NuxtLayout name="board">
-    <dialog ref="dialog" class="backdrop rounded-md overflow-hidden">
-      <div class="relative flex flex-col w-screen max-w-2xl h-[90vh] sm:h-[80vh]">
-        <div class="relative h-48 sm:h-56 flex items-end p-6 sm:p-12 sm:pb-10 bg-white">
+    <dialog ref="dialog"
+            class="backdrop w-full flex justify-center px-4 bg-transparent overflow-hidden">
+      <div
+          class="flex flex-col w-full max-w-2xl h-[90vh] sm:h-[70vh] bg-slate-100 dark:bg-neutral-900 dark:text-white rounded-md overflow-hidden">
+        <div class="relative h-48 sm:h-56 flex items-end p-6 sm:p-12 sm:pb-10 bg-white dark:bg-neutral-950">
           <button class="outline-none" @click="() => {dialog?.close()}">
             <X class="absolute top-8 right-8 " height="28" stroke-width="1.4"/>
           </button>
@@ -21,7 +23,7 @@
             </button>
           </div>
         </div>
-        <div class="flex-grow flex flex-col gap-8 p-6 sm:p-12 sm:pb-10 bg-slate-100 overflow-hidden">
+        <div class="flex-grow flex flex-col gap-8 p-6 sm:p-12 sm:pb-10 overflow-hidden">
           <div class="flex-shrink-0">
             <p>{{ suggestion.description }}</p>
             <div class="flex gap-2 mt-2 text-sm sm:text-base text-gray-600">
@@ -31,9 +33,9 @@
             </div>
           </div>
           <div class="flex-grow min-h-0 overflow-y-auto">
-            <div v-if="comments.length > 0" class="ml-2 sm:ml-4 border-l border-gray-300">
+            <div v-if="comments.length > 0" class="ml-2 sm:ml-4 border-l border-gray-300 dark:border-gray-700">
               <div v-for="comment in comments" :key="comment.id"
-                   class="relative pl-8 py-4 before:absolute before:top-7 before:left-0 before:w-4 before:h-px before:bg-gray-300">
+                   class="relative pl-8 py-4 before:absolute before:top-7 before:left-0 before:w-4 before:h-px before:bg-gray-300 dark:before:bg-gray-700">
                 <p>{{ comment.message }}</p>
                 <div class="flex items-center gap-2 mt-2 text-sm sm:text-base text-gray-600">
                   <span>{{ comment.user || 'Anonym' }}</span>
@@ -55,13 +57,13 @@
                 <div class="flex-grow grid grid-cols-1 grid-rows-1">
                   <div class="invisible p-3 row-start-1 row-span-1 col-start-1 col-span-1">{{ commentary }}</div>
                   <textarea v-model="commentary" :disabled="suggestion.locked || !isAuthenticated"
-                            class="p-3 row-start-1 row-span-1 col-start-1 col-span-1 bg-gray-50 rounded disabled:placeholder-gray-300 outline-none"
+                            class="p-3 row-start-1 row-span-1 col-start-1 col-span-1 bg-gray-50 dark:bg-neutral-800 rounded disabled:placeholder-gray-300 outline-none"
                             placeholder="Kommentieren..."
                             rows="1"></textarea>
                 </div>
                 <button :disabled="suggestion.locked || !isAuthenticated"
                         :style="`background-color: ${ suggestion.locked || !isAuthenticated ? '' : board.accentColor}`"
-                        class="flex items-center justify-center h-12 w-12 rounded p-2 disabled:bg-gray-200 disabled:hover:bg-gray-200">
+                        class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded p-2 disabled:bg-gray-200 disabled:hover:bg-gray-200">
                   <Send class="text-white"/>
                 </button>
               </form>
@@ -183,7 +185,15 @@ const comment = async () => {
 </script>
 
 <style scoped>
+dialog:not([open]) {
+  display: none;
+}
+
 .backdrop::backdrop {
   background-color: rgb(0 0 0 /.8);
+}
+
+.dark .backdrop::backdrop {
+  background-color: rgb(0 0 0 /.9);
 }
 </style>

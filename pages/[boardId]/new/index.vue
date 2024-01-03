@@ -1,8 +1,10 @@
 <template>
   <NuxtLayout name="board">
-    <dialog ref="dialog" class="backdrop rounded-md overflow-hidden">
-      <div class="flex flex-col w-screen max-w-2xl h-[90vh] sm:h-[70vh]">
-        <div class="relative h-44 flex items-end p-6 sm:p-12 sm:pb-10 bg-white">
+    <dialog ref="dialog"
+            class="backdrop w-full flex justify-center px-4 bg-transparent overflow-hidden">
+      <div
+          class="flex flex-col w-full max-w-2xl h-[90vh] sm:h-[70vh] bg-slate-100 dark:bg-neutral-900 dark:text-white rounded-md overflow-hidden">
+        <div class="relative h-44 flex items-end p-6 sm:p-12 sm:pb-10 bg-white dark:bg-neutral-950">
           <button class="outline-none" @click="() => {dialog?.close()}">
             <X class="absolute top-8 right-8 " height="28" stroke-width="1.4"/>
           </button>
@@ -10,7 +12,7 @@
             <h2 class="font-semibold text-lg sm:text-2xl leading-relaxed break-words">Neuen Vorschlag teilen</h2>
           </div>
         </div>
-        <div class="flex-grow flex flex-col gap-8 p-6 sm:p-12 sm:pb-10 bg-slate-100 overflow-hidden">
+        <div class="flex-grow flex flex-col gap-8 p-6 sm:p-12 sm:pb-10 overflow-hidden">
           <form class="h-full flex flex-col gap-4" @submit.prevent="submitNewSuggestion">
             <label class="w-full" for="suggestions_title">
               <span class="flex justify-between mb-2">
@@ -19,12 +21,14 @@
                     title.length
                   }}/120</span>
               </span>
-              <input id="suggestions_title" v-model="title" class="w-full h-12 px-4 rounded-md outline-none"
+              <input id="suggestions_title" v-model="title"
+                     class="w-full h-12 px-4 dark:bg-neutral-800 rounded-md outline-none"
                      type="text"/>
             </label>
             <label class="w-full flex-grow flex flex-col">
               <span class="inline-block mb-2">Beschreibung</span>
-              <textarea v-model="description" class="flex-grow w-full p-4 rounded-md outline-none"></textarea>
+              <textarea v-model="description"
+                        class="flex-grow w-full p-4 dark:bg-neutral-800 rounded-md outline-none"></textarea>
             </label>
             <button class="w-full mt-2 py-3 bg-[var(--clr-accent)] text-white font-semibold rounded-md" type="submit">
               Erstellen
@@ -91,7 +95,15 @@ const submitNewSuggestion = async () => {
 </script>
 
 <style scoped>
+dialog:not([open]) {
+  display: none;
+}
+
 .backdrop::backdrop {
   background-color: rgb(0 0 0 /.8);
+}
+
+.dark .backdrop::backdrop {
+  background-color: rgb(0 0 0 /.9);
 }
 </style>
