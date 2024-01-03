@@ -20,7 +20,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
                 });
                 return abortNavigation();
             }
-            return navigateTo(to.path);
         }
     }
 })
