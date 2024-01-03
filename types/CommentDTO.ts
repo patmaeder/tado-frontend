@@ -1,6 +1,5 @@
 type CommentDTO = {
-    id?: String,
-    message?: String,
+    message: String,
     user: String,
-    suggestion?: SuggestionDTO,
+    suggestion: SuggestionDTO,
 }
