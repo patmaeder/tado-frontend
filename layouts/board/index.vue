@@ -1,6 +1,6 @@
 <template>
-  <NuxtLayout>
-    <div :class="board.appearance == 'DARK' ? 'dark' : ''" name="board-blank">
+  <NuxtLayout name="board-blank">
+    <div :class="board.appearance == 'DARK' ? 'dark' : ''">
       <div :style="`--clr-accent: ${board.accentColor}`"
            class="min-h-screen bg-slate-100 dark:bg-neutral-900 dark:text-white overflow-y-auto">
         <header class="w-full bg-white dark:bg-neutral-950">
@@ -55,12 +55,12 @@
                   <button
                       :data-upvoted="upvotes != undefined ? upvotes.includes(suggestion.id) : false"
                       :disabled="suggestion.locked"
-                      class="group flex justify-between items-center px-4 basis-1/2 text-[var(--clr-accent)] data-[upvoted='true']:text-white disabled:text-gray-600 bg-accent-50 data-[upvoted='true']:bg-[var(--clr-accent)] disabled:bg-gray-200 rounded-tl-md hover:opacity-90"
+                      class="group flex justify-between items-center px-4 basis-1/2 text-accent data-[upvoted='true']:text-white disabled:text-gray-600 bg-accent-50 data-[upvoted='true']:bg-accent disabled:bg-gray-200 rounded-tl-md hover:opacity-90"
                       @click.prevent="toggleUpvote(suggestion.id)">
                 <span
-                    class="flex items-center before:w-0 before:h-0 before:border-transparent before:mr-1 before:border-b-[10px] before:border-b-[var(--clr-accent)] group-data-[upvoted='true']:before:border-b-white group-disabled:before:border-b-gray-500 before:border-l-8 before:border-r-8 before:scale-x-50 before:scale-y-75 -translate-x-1">Upvote</span>
+                    class="flex items-center before:w-0 before:h-0 before:border-l-transparent before:border-r-transparent before:mr-1 before:border-b-[10px] before:border-b-accent group-data-[upvoted='true']:before:border-b-white group-disabled:before:border-b-gray-500 before:border-l-8 before:border-r-8 before:scale-x-50 before:scale-y-75 -translate-x-1">Upvote</span>
                     <span
-                        class="px-4 py-1 bg-[var(--clr-accent)] group-data-[upvoted='true']:bg-white group-data-[upvoted='true']:bg-opacity-30 group-disabled:bg-white group-disabled:bg-opacity-50 rounded-full text-white group-disabled:text-gray-500">
+                        class="px-4 py-1 bg-accent group-data-[upvoted='true']:bg-white group-data-[upvoted='true']:bg-opacity-30 group-disabled:bg-white group-disabled:bg-opacity-50 rounded-full text-white group-disabled:text-gray-500">
                   {{ suggestion.upvoteCount }}
                 </span>
                   </button>
@@ -74,7 +74,7 @@
         <client-only>
           <div v-if="isAuthenticated" class="fixed bottom-4 sm:bottom-10 left-1/2 -translate-x-1/2">
             <NuxtLink :to="`/${board.id}/new`"
-                      class="flex items-center p-2 bg-[var(--clr-accent)] rounded-full shadow-md hover:brightness-95 cursor-pointer">
+                      class="flex items-center p-2 bg-accent rounded-full shadow-md hover:brightness-95 cursor-pointer">
               <Plus class="h-12 w-12 p-2 text-white bg-white bg-opacity-20 rounded-full"/>
               <span class="px-6 text-white text-base md:text-lg font-medium whitespace-nowrap">Vorschlag teilen</span>
             </NuxtLink>

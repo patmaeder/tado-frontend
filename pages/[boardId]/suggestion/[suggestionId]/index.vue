@@ -12,12 +12,12 @@
             <h2 class="font-semibold text-lg sm:text-2xl leading-relaxed break-words">{{ suggestion.title }}</h2>
             <button :data-upvoted="upvotes != undefined ? upvotes.includes(suggestion.id) : false"
                     :disabled="suggestion.locked"
-                    class="group flex justify-between items-center gap-2 sm:gap-4 px-2 sm:px-4 py-2 sm:py-3 text-[var(--clr-accent)] data-[upvoted='true']:text-white disabled:text-gray-600 bg-accent-50 data-[upvoted='true']:bg-[var(--clr-accent)] disabled:bg-gray-200 rounded hover:opacity-90"
+                    class="group flex justify-between items-center gap-2 sm:gap-4 px-2 sm:px-4 py-2 sm:py-3 text-accent data-[upvoted='true']:text-white disabled:text-gray-600 bg-accent-50 data-[upvoted='true']:bg-accent disabled:bg-gray-200 rounded hover:opacity-90"
                     @click.prevent="toggleUpvote(suggestion.id)">
               <span
-                  class="flex items-center before:hidden sm:before:block before:w-0 before:h-0 before:border-transparent before:mr-1 before:border-b-[10px] before:border-b-[var(--clr-accent)] group-data-[upvoted='true']:before:border-b-white group-disabled:before:border-b-gray-500 before:border-l-8 before:border-r-8 before:scale-x-50 before:scale-y-75 sm:-translate-x-1">Upvote</span>
+                  class="flex items-center before:hidden sm:before:block before:w-0 before:h-0 before:border-l-transparent before:border-r-transparent before:mr-1 before:border-b-[10px] before:border-b-accent group-data-[upvoted='true']:before:border-b-white group-disabled:before:border-b-gray-500 before:border-l-8 before:border-r-8 before:scale-x-50 before:scale-y-75 sm:-translate-x-1">Upvote</span>
               <span
-                  class="px-4 py-1 bg-[var(--clr-accent)] group-data-[upvoted='true']:bg-white group-data-[upvoted='true']:bg-opacity-30 group-disabled:bg-white group-disabled:bg-opacity-50 rounded-full text-sm sm:text-base text-white group-disabled:text-gray-500">
+                  class="px-4 py-1 bg-accent group-data-[upvoted='true']:bg-white group-data-[upvoted='true']:bg-opacity-30 group-disabled:bg-white group-disabled:bg-opacity-50 rounded-full text-sm sm:text-base text-white group-disabled:text-gray-500">
                   {{ suggestion.upvoteCount }}
                 </span>
             </button>
@@ -39,7 +39,7 @@
                 <p>{{ comment.message }}</p>
                 <div class="flex items-center gap-2 mt-2 text-sm sm:text-base text-gray-600">
                   <span
-                      :class="comment.userId == board.tenant ? ' text-[var(--clr-accent)] bg-accent-20 px-2 py-1 text-sm rounded-full' : ''">{{
+                      :class="comment.userId == board.tenant ? ' text-accent bg-accent-20 px-2 py-1 text-sm rounded-full' : ''">{{
                       comment.user || 'Anonym'
                     }}</span>
                   <span>·</span>

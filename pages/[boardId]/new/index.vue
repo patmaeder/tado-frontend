@@ -30,7 +30,7 @@
               <textarea v-model="description"
                         class="flex-grow w-full p-4 dark:bg-neutral-800 rounded-md outline-none"></textarea>
             </label>
-            <button class="w-full mt-2 py-3 bg-[var(--clr-accent)] text-white font-semibold rounded-md" type="submit">
+            <button class="w-full mt-2 py-3 bg-accent text-white font-semibold rounded-md" type="submit">
               Erstellen
             </button>
           </form>

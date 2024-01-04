@@ -1,3 +1,4 @@
+@formatter:off
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
@@ -21,6 +22,19 @@ html:has(dialog[open]) {
     direction: rtl;
 }
 
+.bg-accent {
+    background-color: var(--clr-accent);
+}
+
+.data-\[upvoted\=\'true\'\]\:bg-accent[data-upvoted='true'] {
+    background-color: var(--clr-accent);
+}
+
+
+.text-accent {
+    color: var(--clr-accent);
+}
+
 .bg-accent-50 {
     background-color: color-mix(in srgb, var(--clr-accent) 50%, transparent);
 }
@@ -29,6 +43,12 @@ html:has(dialog[open]) {
     background-color: color-mix(in srgb, var(--clr-accent) 20%, transparent);
 }
 
+.before\:border-b-accent::before {
+    content: var(--tw-content);
+    --tw-border-opacity: 1;
+    border-bottom-color: var(--clr-accent);
+    border-bottom-color: color-mix(in srgb, var(--clr-accent) calc(var(--tw-border-opacity) * 100%), transparent);
+}
 
 .animate-drain {
     animation-name: drain;
