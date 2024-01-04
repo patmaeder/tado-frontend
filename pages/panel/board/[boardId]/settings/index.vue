@@ -54,7 +54,7 @@ const {data: board, refresh} = await tado.getBoard(route.params.boardId as strin
 const title = ref(board.value.title);
 
 const updateTitle = async () => {
-  let {error} = await tado.updateBoard(route.params.boardId as string, {title: title.value.trim()});
+  const {error} = await tado.updateBoard(route.params.boardId as string, {title: title.value.trim()});
 
   if (error.value != null) {
     showNotification({

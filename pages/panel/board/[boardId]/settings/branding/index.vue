@@ -3,7 +3,7 @@
     <div class="col-span-8 grid grid-cols-3 gap-12 p-16 overflow-hidden">
 
       <!-- Settings Sidebar -->
-      <div class="col-span-1 flex flex-col">
+      <div class="col-span-1 flex flex-col gap-4 overflow-hidden">
         <div class="flex-grow overflow-y-scroll max-w-full">
           <fieldset class="max-w-full inline-flex flex-col gap-8 items-start">
             <label class="w-full flex flex-col">
@@ -55,9 +55,14 @@
           </fieldset>
         </div>
 
-        <div class="flex-shrink-0">
+        <div class="flex-shrink-0 flex items-center">
           <button class="py-2 px-4 text-white font-light rounded bg-secondary hover:bg-secondary-800" @click="save">
             Änderungen speichern
+          </button>
+          <button
+              class="flex items-center p-2 text-sm font-light hover:text-gray-600" @click="reset">
+            <X height="12"/>
+            <span>Zurücksetzen</span>
           </button>
         </div>
       </div>
@@ -74,11 +79,11 @@
 </template>
 
 <script lang="ts" setup>
-import {Info, Upload, XCircle} from 'lucide-vue-next';
+import {Info, Upload, X, XCircle} from 'lucide-vue-next';
 
 const route = useRoute();
 const {showNotification} = useToastNotifications();
-const {data: board, refresh} = await tado.getBoard(route.params.boardId as string);
+const {data: board} = await tado.getBoard(route.params.boardId as string);
 const logo = ref(board.value.logo);
 const logoFilename = ref(board.value.logo.split("/").pop())
 const description = ref(board.value.description);
@@ -95,7 +100,7 @@ const save = async () => {
     }
   }
 
-  let {error} = await tado.updateBoard(route.params.boardId as string, {
+  const {data, error} = await tado.updateBoard(route.params.boardId as string, {
     ...logoProps,
     description: description.value,
     appearance: appearance.value,
@@ -114,7 +119,7 @@ const save = async () => {
     return;
   }
 
-  await refresh();
+  board.value = data.value;
   showNotification({
     icon: Info,
     message: "Änderungen wurden erfolgreich gespeichert",
@@ -127,5 +132,13 @@ const save = async () => {
 const convertFile = async (event) => {
   logo.value = await fileToBase64(event.target.files[0]);
   logoFilename.value = event.target.files[0].name;
+}
+
+const reset = () => {
+  logo.value = board.value.logo;
+  logoFilename.value = board.value.logo.split("/").pop()
+  description.value = board.value.description;
+  appearance.value = board.value.appearance;
+  accentColor.value = board.value.accentColor;
 }
 </script>
