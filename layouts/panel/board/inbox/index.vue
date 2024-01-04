@@ -129,7 +129,7 @@ import {Plus, Search, SortDesc} from "lucide-vue-next";
 const route = useRoute();
 const activeCategory = useState<null | String>("inbox:activeCategory", () => null);
 const suggestionsQuery = useState("inbox:suggestionsQuery", () => '');
-const suggestionsOrder = useState("inbox:suggestionsOrder", () => 'UNREAD');
+const suggestionsOrder = useState("inbox:suggestionsOrder", () => 'NEWEST');
 const {data: categories} = await tado.getCategories(route.params.boardId as String);
 const {data: suggestions} = await tado.getSuggestions(route.params.boardId as String);
 
@@ -146,11 +146,14 @@ const visibleSuggestions = computed<Suggestion[]>(() => {
   }
 
   switch (suggestionsOrder.value) {
-    case 'NEWEST':
-      ordered.sort((a, b) => a.createdAt < b.createdAt ? 1 : -1);
-      break;
-    case 'OLDEST':
-      ordered.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1);
+    case 'UNREAD':
+      ordered.sort((a, b) => {
+        if (a.unread == b.unread) {
+          return a.createdAt < b.createdAt ? 1 : -1;
+        } else {
+          return b.unread ? 1 : -1;
+        }
+      })
       break;
     case 'MOST_UPVOTED':
       ordered.sort((a, b) => {
@@ -161,14 +164,12 @@ const visibleSuggestions = computed<Suggestion[]>(() => {
         }
       })
       break;
+    case 'OLDEST':
+      ordered.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1);
+      break;
     default:
-      ordered.sort((a, b) => {
-        if (a.unread == b.unread) {
-          return a.createdAt < b.createdAt ? 1 : -1;
-        } else {
-          return b.unread ? 1 : -1;
-        }
-      });
+      ordered.sort((a, b) => a.createdAt < b.createdAt ? 1 : -1);
+      break;
   }
 
   return ordered;
