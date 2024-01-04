@@ -154,8 +154,6 @@ const unvote = async (suggestionId: String) => {
 }
 
 const comment = async () => {
-  // TODO: Don't rerender entire comment tree when posting new comment
-
   if (!(commentary.value.trim().length > 0)) return;
 
   const {error} = await tado.createComment({

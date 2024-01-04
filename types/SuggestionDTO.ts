@@ -1,7 +1,7 @@
 type SuggestionDTO = {
     id?: String,
-    title: String,
+    title?: String,
     description?: String,
-    user: String,
-    board: BoardDTO
+    user?: String,
+    board?: BoardDTO
 }
