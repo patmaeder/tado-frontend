@@ -1,13 +1,12 @@
 import {Auth0Client, type Auth0ClientOptions, createAuth0Client, User} from '@auth0/auth0-spa-js';
 
 export const useAuth0 = () => {
+    const {showNotification} = useToastNotifications();
     let client = useState<Auth0Client>('auth0:client');
     let isInitialized = useState<Boolean>('auth0:clientInitialized', () => false);
     let user = useState<User>('auth0:user');
     let isAuthenticated = useState<Boolean>('auth0:userIsAuthenticated');
     let accessToken = useState<String>('auth0:accessToken');
-
-    // TODO: When error (email not verified), redirect user and display error
 
     const init = (config: Auth0ClientOptions, autoRedirect = false) => {
         return new Promise(async (resolve, reject) => {
@@ -16,7 +15,11 @@ export const useAuth0 = () => {
             client.value = await createAuth0Client(config);
 
             if (location.search.includes("state=") && (location.search.includes("code=") || location.search.includes("error="))) {
-                await client.value.handleRedirectCallback();
+                try {
+                    await client.value.handleRedirectCallback();
+                } catch (e) {
+                    reject(e)
+                }
 
                 let urlSearchParams = new URLSearchParams(location.search);
                 urlSearchParams.delete("state");
