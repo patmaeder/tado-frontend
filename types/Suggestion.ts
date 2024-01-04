@@ -4,6 +4,7 @@ type Suggestion = {
     description: String,
     category: Category,
     user: String,
+    userId: String,
     locked: Boolean,
     unread: Boolean,
     upvoteCount: number,

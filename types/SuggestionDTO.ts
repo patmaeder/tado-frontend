@@ -3,5 +3,8 @@ type SuggestionDTO = {
     title?: String,
     description?: String,
     user?: String,
-    board?: BoardDTO
+    category?: CategoryDTO,
+    board?: BoardDTO,
+    unread?: Boolean,
+    locked?: Boolean,
 }

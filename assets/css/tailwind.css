@@ -25,6 +25,10 @@ html:has(dialog[open]) {
     background-color: color-mix(in srgb, var(--clr-accent) 50%, transparent);
 }
 
+.bg-accent-20 {
+    background-color: color-mix(in srgb, var(--clr-accent) 20%, transparent);
+}
+
 
 .animate-drain {
     animation-name: drain;

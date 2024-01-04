@@ -1,6 +1,6 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
 
-    const {isInitialized, init, isAuthenticated, login} = useAuth0();
+    const {isInitialized, init, isAuthenticated, login, accessToken} = useAuth0();
 
     if (to.path.startsWith("/panel")) {
         if (!isInitialized.value) {
@@ -13,11 +13,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
                 }
             });
             if (!isAuthenticated.value) {
-                await login({
-                    authorizationParams: {
-                        redirect_uri: "http://localhost:3000/redirect?origin=" + to.path,
-                    }
-                });
+                await login();
                 return abortNavigation();
             }
         }

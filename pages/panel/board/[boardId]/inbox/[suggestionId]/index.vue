@@ -34,10 +34,12 @@
           <div class="flex justify-between items-center">
             <h1 class="text-xl font-medium">{{ suggestion.title }}</h1>
             <span
-                class="flex items-center px-4 text-primary bg-primary-100 rounded-full before:w-0 before:h-0 before:border-b-[10px] before:border-b-primary before:border-l-8 before:border-l-transparent before:border-r-8 before:border-r-transparent before:scale-x-75 before:-translate-x-1">32</span>
+                class="flex items-center px-4 text-primary bg-primary-100 rounded-full before:w-0 before:h-0 before:border-b-[10px] before:border-b-primary before:border-l-8 before:border-l-transparent before:border-r-8 before:border-r-transparent before:scale-x-75 before:-translate-x-1">{{
+                suggestion.upvoteCount
+              }}</span>
           </div>
-          <div class="flex gap-2 mt-2">
-            <span>Author</span>
+          <div class="flex items-center gap-2 mt-2">
+            <span>{{ suggestion.user || 'Anonym' }}</span>
             <span>·</span>
             <span>{{ getElapsedTimeSinceCreationDate(suggestion.createdAt) }}</span>
             <template v-if="suggestion.category.title != '_all'">
@@ -59,13 +61,13 @@
               <div v-for="comment in comments.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1)"
                    class="py-6 before:absolute before:left-0 before:translate-y-3 before:h-px before:w-4 before:bg-gray-300">
                 <p class="leading-relaxed max-w-[84%]">{{ comment.message }}</p>
-                <div class="flex gap-2 mt-3 text-gray-600">
-                  <span>Author</span>
+                <div class="flex items-center gap-2 mt-3 text-gray-600">
+                  <span
+                      :class="comment.userId == board.tenant ? 'bg-primary-100 rounded-full text-primary text-sm px-2 py-1' : ''">{{
+                      comment.user || 'Anonym'
+                    }}</span>
                   <span>·</span>
                   <span>{{ getElapsedTimeSinceCreationDate(comment.createdAt) }}</span>
-                  <span>·</span>
-                  <span
-                      class="text-primary before:w-0 before:h-0 before:inline-block before:border-b-[10px] before:border-b-primary before:border-l-8 before:border-l-transparent before:border-r-8 before:border-r-transparent before:scale-x-50 before:scale-y-75 -translate-x-1">32</span>
                 </div>
               </div>
             </div>
@@ -136,7 +138,10 @@
 import {Bookmark, Lock, MessageSquare, Save, Send, Trash2, Unlock, XCircle} from "lucide-vue-next";
 
 const route = useRoute();
+const {user} = useAuth0();
 const {showNotification} = useToastNotifications();
+const {data: board} = await tado.getBoard(route.params.boardId as string);
+const {refresh: refreshSuggestions} = await tado.getSuggestions(route.params.boardId as string);
 const {data: suggestion, refresh: refreshSuggestion} = await tado.getSuggestion(route.params.suggestionId as string);
 const {data: comments, refresh: refreshComments} = await tado.getComments(route.params.suggestionId as string);
 const {data: categories} = await tado.getCategories(route.params.boardId as string);
@@ -182,6 +187,8 @@ const deleteSuggestion = async () => {
     status: "SUCCESS",
     duration: 5000
   })
+
+  refreshSuggestions();
 }
 
 const lockSuggestion = async () => {
@@ -281,6 +288,7 @@ const comment = async () => {
     suggestion: {
       id: route.params.suggestionId as String
     },
+    user: board.value.title,
   })
 
   if (error.value != null) {

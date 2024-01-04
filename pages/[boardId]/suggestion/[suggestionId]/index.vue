@@ -38,7 +38,10 @@
                    class="relative pl-8 py-4 before:absolute before:top-7 before:left-0 before:w-4 before:h-px before:bg-gray-300 dark:before:bg-gray-700">
                 <p>{{ comment.message }}</p>
                 <div class="flex items-center gap-2 mt-2 text-sm sm:text-base text-gray-600">
-                  <span>{{ comment.user || 'Anonym' }}</span>
+                  <span
+                      :class="comment.userId == board.tenant ? ' text-[var(--clr-accent)] bg-accent-20 px-2 py-1 text-sm rounded-full' : ''">{{
+                      comment.user || 'Anonym'
+                    }}</span>
                   <span>·</span>
                   <span>{{ getElapsedTimeSinceCreationDate(comment.createdAt) }}</span>
                 </div>

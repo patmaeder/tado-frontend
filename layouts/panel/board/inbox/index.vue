@@ -73,14 +73,16 @@
                     <div class="flex-grow w-full flex flex-col gap-2 pr-2 font-medium">
                       <h4 class="line-clamp-2 overflow-ellipsis">{{ suggestion.title }}</h4>
                       <div class="flex gap-2 text-sm font-normal">
-                        <span>Author</span>
+                        <span>{{ suggestion.user || 'Anonym' }}</span>
                         <span>·</span>
                         <span>{{ getElapsedTimeSinceCreationDate(suggestion.createdAt) }}</span>
                       </div>
                     </div>
                     <div class="flex items-center">
                 <span
-                    class="flex items-center pr-4 pl-2 text-primary bg-primary-200 rounded-full before:w-0 before:h-0 before:border-b-[10px] before:border-b-primary before:border-l-8 before:border-l-transparent before:border-r-8 before:border-r-transparent before:scale-x-50 before:scale-y-75 -translate-x-1">32</span>
+                    class="flex items-center pr-4 pl-2 text-primary bg-primary-200 rounded-full before:w-0 before:h-0 before:border-b-[10px] before:border-b-primary before:border-l-8 before:border-l-transparent before:border-r-8 before:border-r-transparent before:scale-x-50 before:scale-y-75 -translate-x-1">{{
+                    suggestion.upvoteCount
+                  }}</span>
                     </div>
                   </NuxtLink>
                 </li>
@@ -132,37 +134,35 @@ const {data: categories} = await tado.getCategories(route.params.boardId as Stri
 const {data: suggestions} = await tado.getSuggestions(route.params.boardId as String);
 
 const visibleSuggestions = computed<Suggestion[]>(() => {
-  let temp;
+  let ordered: Suggestion[] = suggestions.value;
 
   if (activeCategory.value != null) {
-    temp = suggestions.value.filter(suggestion => suggestion.category != null && suggestion.category.id == activeCategory.value)
-  } else {
-    temp = suggestions.value;
+    ordered = ordered.filter(suggestion => suggestion.category != null && suggestion.category.id == activeCategory.value)
   }
 
   if (suggestionsQuery.value != '') {
-    temp = temp.filter(({title, description}) =>
+    ordered = ordered.filter(({title, description}) =>
         title.toLowerCase().includes(suggestionsQuery.value.toLowerCase()) || description.toLowerCase().includes(suggestionsQuery.value.toLowerCase()));
   }
 
   switch (suggestionsOrder.value) {
     case 'NEWEST':
-      temp.sort((a, b) => a.createdAt < b.createdAt ? 1 : -1);
+      ordered.sort((a, b) => a.createdAt < b.createdAt ? 1 : -1);
       break;
     case 'OLDEST':
-      temp.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1);
+      ordered.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1);
       break;
     case 'MOST_UPVOTED':
-      temp.sort((a, b) => {
-        if (a.upvotes == b.upvotes) {
+      ordered.sort((a, b) => {
+        if (a.upvoteCount == b.upvoteCount) {
           return a.createdAt < b.createdAt ? 1 : -1;
         } else {
-          return a.upvotes ? 1 : -1;
+          return a.upvoteCount < b.upvoteCount ? 1 : -1;
         }
       })
       break;
     default:
-      temp.sort((a, b) => {
+      ordered.sort((a, b) => {
         if (a.unread == b.unread) {
           return a.createdAt < b.createdAt ? 1 : -1;
         } else {
@@ -171,6 +171,6 @@ const visibleSuggestions = computed<Suggestion[]>(() => {
       });
   }
 
-  return temp;
+  return ordered;
 })
 </script>
