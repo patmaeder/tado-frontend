@@ -43,7 +43,8 @@
 <script lang="ts" setup>
 import {X, XCircle} from 'lucide-vue-next'
 
-const route = useRoute()
+const route = useRoute();
+const router = useRouter();
 const {showNotification} = useToastNotifications();
 const {isAuthenticated, user} = useAuth0();
 
@@ -61,8 +62,13 @@ onMounted(async () => {
 
   dialog.value?.addEventListener("close", (event) => {
     event.preventDefault();
-    // TODO: Save scroll state
-    navigateTo("/" + route.params.boardId);
+
+    try {
+      const previous = router.getRoutes().pop();
+      if (previous?.path == "/:boardId()") router.back();
+    } catch (e) {
+      navigateTo("/" + route.params.boardId);
+    }
   })
 })
 
