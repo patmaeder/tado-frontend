@@ -120,7 +120,7 @@ const updateTitle = async (categoryId: String) => {
     title: event.target.value,
   })
 
-  if (error.value != null) {
+  if (error.value) {
     showNotification({
       icon: XCircle,
       title: error.value.name,
@@ -148,7 +148,7 @@ const updateColor = async (categoryId: String) => {
     color: event?.target?.value,
   })
 
-  if (error.value != null) {
+  if (error.value) {
     showNotification({
       icon: XCircle,
       title: error.value.name,
@@ -180,7 +180,7 @@ const createNewCategory = async () => {
     }
   })
 
-  if (error.value != null) {
+  if (error.value) {
     showNotification({
       icon: XCircle,
       title: error.value.name,
@@ -207,7 +207,7 @@ const createNewCategory = async () => {
 const deleteCategory = async (categoryId: String) => {
   const {error} = await tado.deleteCategory(categoryId);
 
-  if (error.value != null) {
+  if (error.value) {
     showNotification({
       icon: XCircle,
       title: error.value.name,

@@ -119,7 +119,7 @@ const toggleUpvote = async (suggestionId: String) => {
 const upvote = async (suggestionId: String) => {
   const {error} = await tado.upvoteSuggestion(suggestionId);
 
-  if (error.value != null) {
+  if (error.value) {
     showNotification({
       icon: XCircle,
       title: error.value.name,
@@ -139,7 +139,7 @@ const upvote = async (suggestionId: String) => {
 const unvote = async (suggestionId: String) => {
   const {error} = await tado.unvoteSuggestion(suggestionId);
 
-  if (error.value != null) {
+  if (error.value) {
     showNotification({
       icon: XCircle,
       title: error.value.name,
@@ -167,7 +167,7 @@ const comment = async () => {
     },
   })
 
-  if (error.value != null) {
+  if (error.value) {
     showNotification({
       icon: XCircle,
       title: error.value.name,

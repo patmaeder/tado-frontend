@@ -56,7 +56,7 @@ const title = ref(board.value.title);
 const updateTitle = async () => {
   const {error} = await tado.updateBoard(route.params.boardId as string, {title: title.value.trim()});
 
-  if (error.value != null) {
+  if (error.value) {
     showNotification({
       icon: XCircle,
       title: error.value.name,
@@ -81,7 +81,7 @@ const updateTitle = async () => {
 const deleteBoard = async () => {
   const {error} = await tado.deleteBoard(route.params.boardId as string);
 
-  if (error.value != null) {
+  if (error.value) {
     showNotification({
       icon: XCircle,
       title: error.value.name,

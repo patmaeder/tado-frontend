@@ -11,7 +11,7 @@
               <input class="appearance-none w-0 h-0 overflow-hidden"
                      type="file" @change="convertFile">
               <div class="w-full flex items-center gap-4 py-2 px-4 bg-gray-200 outline-none rounded">
-                <span class="flex-grow break-words">{{ logoFilename }}</span>
+                <span class="flex-grow break-all">{{ logoFilename }}</span>
                 <Upload class="flex-shrink-0" height="16"/>
               </div>
             </label>
@@ -107,7 +107,7 @@ const save = async () => {
     accentColor: accentColor.value
   });
 
-  if (error.value != null) {
+  if (error.value) {
     showNotification({
       icon: XCircle,
       title: error.value.name,

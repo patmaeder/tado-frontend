@@ -167,7 +167,7 @@ const handleCommentSectionScroll = (event) => {
 const deleteSuggestion = async () => {
   const {error} = await tado.deleteSuggestion(route.params.suggestionId as string);
 
-  if (error.value != null) {
+  if (error.value) {
     showNotification({
       icon: XCircle,
       title: error.value.name,
@@ -181,7 +181,7 @@ const deleteSuggestion = async () => {
 
   await refreshSuggestions();
   navigateTo(`/panel/board/${ route.params.boardId }/inbox`);
-  
+
   showNotification({
     icon: Trash2,
     message: "Beitrag wurde erfolgreich gelöschen.",
@@ -194,7 +194,7 @@ const deleteSuggestion = async () => {
 const lockSuggestion = async () => {
   const {error} = await tado.updateSuggestion(route.params.suggestionId as string, {locked: true});
 
-  if (error.value != null) {
+  if (error.value) {
     showNotification({
       icon: XCircle,
       title: error.value.name,
@@ -219,7 +219,7 @@ const lockSuggestion = async () => {
 const unlockSuggestion = async () => {
   const {error} = await tado.updateSuggestion(route.params.suggestionId as string, {locked: false});
 
-  if (error.value != null) {
+  if (error.value) {
     showNotification({
       icon: XCircle,
       title: error.value.name,
@@ -248,7 +248,7 @@ const chooseCategory = async () => {
     }
   });
 
-  if (error.value != null) {
+  if (error.value) {
     showNotification({
       icon: XCircle,
       title: error.value.name,
@@ -291,7 +291,7 @@ const comment = async () => {
     user: board.value.title,
   })
 
-  if (error.value != null) {
+  if (error.value) {
     showNotification({
       icon: XCircle,
       title: error.value.name,

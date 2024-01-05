@@ -75,9 +75,16 @@ import {ChevronDown, LogOut, Plus, User} from "lucide-vue-next";
 
 const route = useRoute();
 const {user, logout} = useAuth0();
-const {data: boards, error: error} = await tado.getBoards();
-const board = boards.value.find((board: Board) => board.id == route.params.boardId);
+const {data: boards, error: boardsError} = await tado.getBoards();
+const {data: board, error: boardError} = await tado.getBoard(route.params.boardId as String);
 const dropdownMenu = ref<HTMLDialogElement>();
+
+if (boardsError.value || boardError.value) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: "Board nicht gefunden",
+  })
+}
 
 const toggleDropdownMenu = () => {
   dropdownMenu.value?.open ? dropdownMenu.value?.close() : dropdownMenu.value?.show();

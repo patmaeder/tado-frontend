@@ -84,7 +84,7 @@ const submitNewSuggestion = async () => {
     }
   })
 
-  if (error.value != null) {
+  if (error.value) {
     showNotification({
       icon: XCircle,
       title: error.value.name,

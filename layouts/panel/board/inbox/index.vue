@@ -132,8 +132,15 @@ const route = useRoute();
 const activeCategory = useState<null | String>("inbox:activeCategory", () => null);
 const suggestionsQuery = useState("inbox:suggestionsQuery", () => '');
 const suggestionsOrder = useState("inbox:suggestionsOrder", () => 'NEWEST');
-const {data: categories} = await tado.getCategories(route.params.boardId as String);
-const {data: suggestions} = await tado.getSuggestions(route.params.boardId as String);
+const {data: categories, error: categoriesError} = await tado.getCategories(route.params.boardId as String);
+const {data: suggestions, error: suggestionsError} = await tado.getSuggestions(route.params.boardId as String);
+
+if (categoriesError.value || suggestionsError.value) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: "Board nicht gefunden",
+  })
+}
 
 const visibleSuggestions = computed<Suggestion[]>(() => {
   let ordered: Suggestion[] = suggestions.value;
