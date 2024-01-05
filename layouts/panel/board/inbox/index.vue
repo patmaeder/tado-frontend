@@ -18,14 +18,16 @@
                       @click="() => { activeCategory = null }">
                     <span class="text-base">Alle</span>
                   </button>
-                  <button v-for="category in categories.filter(x => x.title != '_all')" :id="`category_${category.id}`"
-                          :key="category.id"
-                          :data-active="activeCategory == category.id ? 'true' : 'false'"
-                          class="w-full min-h-[3rem] px-4 py-2 flex items-center rounded text-sm data-[active='true']:font-medium data-[active='true']:bg-gray-200"
-                          @click="() => { activeCategory = category.id }">
+                  <button
+                      v-for="category in categories.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1).filter(x => x.title != '_all')"
+                      :id="`category_${category.id}`"
+                      :key="category.id"
+                      :data-active="activeCategory == category.id ? 'true' : 'false'"
+                      class="w-full min-h-[3rem] px-4 py-2 flex items-center rounded text-sm data-[active='true']:font-medium data-[active='true']:bg-gray-200"
+                      @click="() => { activeCategory = category.id }">
                     <span :style="`border-color: ${category.color}`"
-                          class="inline-block w-[10px] h-[10px] border-[3px] box-border rounded-full mr-2"></span>
-                    <span>{{ category.title }}</span>
+                          class="inline-block flex-shrink-0 w-[10px] h-[10px] border-[3px] box-border rounded-full mr-2"></span>
+                    <span class="text-left">{{ category.title }}</span>
                   </button>
                 </div>
               </div>

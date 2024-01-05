@@ -135,7 +135,7 @@
 </template>
 
 <script lang="ts" setup>
-import {Bookmark, Lock, MessageSquare, Save, Send, Trash2, Unlock, XCircle} from "lucide-vue-next";
+import {Bookmark, CheckCircle, Lock, MessageSquare, Save, Send, Trash2, Unlock, XCircle} from "lucide-vue-next";
 
 const route = useRoute();
 const {user} = useAuth0();
@@ -179,7 +179,9 @@ const deleteSuggestion = async () => {
     return;
   }
 
+  await refreshSuggestions();
   navigateTo(`/panel/board/${ route.params.boardId }/inbox`);
+  
   showNotification({
     icon: Trash2,
     message: "Beitrag wurde erfolgreich gelöschen.",
@@ -187,8 +189,6 @@ const deleteSuggestion = async () => {
     status: "SUCCESS",
     duration: 5000
   })
-
-  refreshSuggestions();
 }
 
 const lockSuggestion = async () => {
@@ -266,7 +266,7 @@ const chooseCategory = async () => {
   await refreshSuggestions();
 
   showNotification({
-    icon: Unlock,
+    icon: CheckCircle,
     message: "Kategorie wurde erfolgreich geändert.",
     type: "BANNER",
     status: "SUCCESS",

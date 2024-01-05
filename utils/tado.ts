@@ -65,6 +65,18 @@ export default class Tado {
         return this.fetchTado<Category[]>("/boards/" + boardId + "/categories");
     }
 
+    static createCategory(categoryDTO: CategoryDTO) {
+        return this.fetchTado<Category>("/categories", {method: "POST", body: categoryDTO});
+    }
+
+    static updateCategory(categoryId: String, categoryDTO: CategoryDTO) {
+        return this.fetchTado<Category>("/categories/" + categoryId, {method: "PATCH", body: categoryDTO});
+    }
+
+    static deleteCategory(categoryId: String) {
+        return this.fetchTado<void>("/categories/" + categoryId, {method: "DELETE"});
+    }
+
     static getUpvotes() {
         return this.fetchTado<String[]>("/upvotes");
     }
