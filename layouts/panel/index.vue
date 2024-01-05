@@ -15,7 +15,8 @@
 
         <div class="col-span-3 h-full relative inline-flex items-center justify-end text-black">
           <button class="flex gap-4 items-center" @click="toggleDropdownMenu">
-            <div v-if="route.path.includes('/board/')" class="h-12">
+            <div v-if="route.path.includes('/board/')"
+                 :class="`h-14 p-2 ${board?.appearance == 'DARK' ? 'bg-neutral-900' : ''} rounded`">
               <img :src="board?.logo" class="h-full">
             </div>
             <span v-else>Menü</span>
@@ -25,8 +26,10 @@
                   class="absolute top-0 translate-y-20 w-80 mt-4 mr-0 ml-auto bg-transparent z-10">
             <div class="mb-2 p-6 bg-white rounded-md border border-gray-300 drop-shadow-md overflow-hidden">
               <ul class="w-full flex flex-col gap-4">
-                <li v-for="board in boards" :key="board.id" class="h-14 w-full p-2 border border-gray-200 rounded">
-                  <NuxtLink :to="`/panel/board/${board.id}/inbox`" class="outline-none">
+                <li v-for="board in boards" :key="board.id"
+                    :class="`h-14 w-full p-2 ${board.appearance == 'DARK' ? 'bg-neutral-900' : ''} border border-gray-200 rounded-md`">
+                  <NuxtLink :to="`/panel/board/${board.id}/inbox`"
+                            class="outline-none">
                     <img :src="board.logo" class="h-full w-full object-contain object-left">
                   </NuxtLink>
                 </li>
