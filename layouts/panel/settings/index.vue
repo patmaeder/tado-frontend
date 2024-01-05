@@ -2,8 +2,14 @@
   <NuxtLayout name="panel">
 
     <template #header>
-      <p>Settings</p>
     </template>
+
+    <main class="p-16">
+      <slot></slot>
+    </main>
 
   </NuxtLayout>
 </template>
+
+<script lang="ts" setup>
+</script>
