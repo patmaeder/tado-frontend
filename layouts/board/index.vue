@@ -9,11 +9,11 @@
               <div v-if="isAuthenticated" class="flex items center">
                 <span>{{ user?.nickname }}</span>
                 <button class="ml-3 pl-2 border-l border-gray-300"
-                        @click="() => {logout()}">
+                        @click="logout">
                   <LogOut height="16"/>
                 </button>
               </div>
-              <button v-else class="font-medium" @click="() => {login()}">Einloggen</button>
+              <button v-else class="font-medium" @click="login">Einloggen</button>
             </client-only>
           </div>
           <div class="px-12 sm:px-16 md:px-28 xl:px-72 pb-12 sm:pb-16">

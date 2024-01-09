@@ -3,7 +3,7 @@
     <div class="col-span-8 flex flex-col gap-12 p-16 overflow-auto">
       <div class=" p-4 bg-primary-100 text-primary border border-primary-200 rounded">
         <p class="mb-2">Dieses Board ist öffentlich unter folgendem Link zu erreichen:</p>
-        <NuxtLink :to="`http://localhost:3000/${ board.id }`" class="underline">http://localhost:3000/{{
+        <NuxtLink :to="`http://localhost:3000/${ board.id }`" class="underline" target="_blank">http://localhost:3000/{{
             board.id
           }}
         </NuxtLink>

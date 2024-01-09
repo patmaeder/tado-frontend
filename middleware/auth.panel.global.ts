@@ -1,21 +1,33 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
 
-    const {isInitialized, init, isAuthenticated, login, accessToken} = useAuth0();
+    const {isInitialized, context, init, isAuthenticated, login, accessToken} = useAuth0();
 
-    if (to.path.startsWith("/panel")) {
-        if (!isInitialized.value) {
-            await init({
-                domain: "dev-d62xibfl4x3znv4i.us.auth0.com",
-                clientId: "kSmyKUQNRkiRv43tpC22TyU9iRPfa3ym",
-                cacheLocation: "localstorage",
-                authorizationParams: {
-                    audience: "https://www.tado.com"
-                }
-            });
-            if (!isAuthenticated.value) {
-                await login();
-                return abortNavigation();
-            }
+    if (process.server || !to.path.startsWith("/panel") || to.path.startsWith("/redirect")) return
+    if (isInitialized.value && context.value == "TENANT") return
+
+    await init("TENANT", {
+        domain: "dev-d62xibfl4x3znv4i.us.auth0.com",
+        clientId: "kSmyKUQNRkiRv43tpC22TyU9iRPfa3ym",
+        authorizationParams: {
+            audience: "https://www.tado.com"
         }
+    }, new URL(location.host + to.fullPath));
+
+    if (!isAuthenticated.value) {
+        await login(to.fullPath);
+        return abortNavigation();
     }
+
+    delete to.query["code"];
+    delete to.query["state"];
+    let searchParams = "";
+
+    let i = 0;
+    for (let key in to.query) {
+        searchParams += i == 0 ? "?" : "&"
+        searchParams += key + "=" + to.query[key];
+        i++;
+    }
+
+    return navigateTo(to.path + searchParams)
 })

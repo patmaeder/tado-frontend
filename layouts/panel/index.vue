@@ -46,7 +46,7 @@
             <div class="rounded-md bg-white border border-gray-300 drop-shadow-md overflow-hidden">
               <div class="p-6">
                 <button class="flex items-center gap-4 hover:text-gray-700"
-                        @click="() => {logout('http://localhost:3000')}">
+                        @click="() => {logout('/')}">
                   <LogOut/>
                   <span>Ausloggen</span>
                 </button>
