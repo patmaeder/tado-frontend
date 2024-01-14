@@ -20,7 +20,8 @@
       </div>
       <div class="flex flex-col items-center mb-[12vh]">
         <p>{{ props.error.message }}</p>
-        <NuxtLink class="py-2 px-4 mt-8 text-white bg-secondary rounded-md" to="/">Zurück zur Startseite</NuxtLink>
+        <button class="py-2 px-4 mt-8 text-white bg-secondary rounded-md" @click="handleError">Zurück zur Startseite
+        </button>
       </div>
     </template>
   </div>

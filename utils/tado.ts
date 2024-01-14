@@ -102,6 +102,16 @@ export default class Tado {
             'Access-Control-Allow-Origin': '*',
         }
 
-        return useFetch(this.apiUrl + path, opts) as AsyncData<T, FetchError<any> | null>;
+        const res = useFetch(this.apiUrl + path, opts) as AsyncData<T, FetchError<any> | null>;
+
+        if (res.error) {
+            throw createError({
+                statusCode: 500,
+                fatal: true,
+                statusMessage: 'Service currently unavailable. This problem won\'t be resolved by reloading the page. We apologize for the inconvenience.',
+            })
+        }
+
+        return res;
     }
 }
