@@ -99,13 +99,7 @@ onMounted(async () => {
 
   dialog.value?.addEventListener("close", (event) => {
     event.preventDefault();
-
-    try {
-      const previous = router.getRoutes().pop();
-      if (previous?.path == "/:boardId()") router.back();
-    } catch (e) {
-      navigateTo("/" + route.params.boardId);
-    }
+    navigateTo("/" + route.params.boardId);
   })
 
   if (isAuthenticated.value) await refreshUpvotes();

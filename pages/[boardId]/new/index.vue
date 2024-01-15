@@ -14,22 +14,28 @@
         </div>
         <div class="flex-grow flex flex-col gap-8 p-6 sm:p-12 sm:pb-10 overflow-hidden">
           <form class="h-full flex flex-col gap-4" @submit.prevent="submitNewSuggestion">
-            <label class="w-full" for="suggestions_title">
+            <div>
+              <label class="w-full" for="suggestions_title">
               <span class="flex justify-between mb-2">
                 <span>Titel</span>
                 <span :class="`text-sm ${title.length > 120 ? 'text-red-600' : 'text-gray-600'}`">{{
                     title.length
                   }}/120</span>
               </span>
-              <input id="suggestions_title" v-model="title"
-                     class="w-full h-12 px-4 dark:bg-neutral-800 rounded-md outline-none"
-                     type="text"/>
-            </label>
-            <label class="w-full flex-grow flex flex-col">
-              <span class="inline-block mb-2">Beschreibung</span>
-              <textarea v-model="description"
-                        class="flex-grow w-full p-4 dark:bg-neutral-800 rounded-md outline-none"></textarea>
-            </label>
+                <input id="suggestions_title" v-model="title"
+                       :class="`w-full h-12 px-4 dark:bg-neutral-800 rounded-md outline-none ${titleError != '' ? 'border border-red-600' : ''}`"
+                       type="text"/>
+              </label>
+              <span v-if="titleError != ''" class="mt-2 text-red-600 text-sm">{{ titleError }}</span>
+            </div>
+            <div class="flex-grow flex flex-col">
+              <label class="w-full flex-grow flex flex-col">
+                <span class="inline-block mb-2">Beschreibung</span>
+                <textarea v-model="description"
+                          :class="`flex-grow w-full p-4 dark:bg-neutral-800 rounded-md outline-none ${descriptionError != '' ? 'border border-red-600' : ''}`"></textarea>
+              </label>
+              <span v-if="descriptionError != ''" class="mt-2 text-red-600 text-sm">{{ descriptionError }}</span>
+            </div>
             <button class="w-full mt-2 py-3 bg-accent text-white font-semibold rounded-md" type="submit">
               Erstellen
             </button>
@@ -51,7 +57,9 @@ const {isAuthenticated, user} = useAuth0();
 const {data: board} = await tado.getBoard(route.params.boardId as String);
 const dialog = ref<HTMLDialogElement>();
 const title = ref("");
+const titleError = ref("");
 const description = ref("");
+const descriptionError = ref("");
 
 if (!isAuthenticated.value) {
   navigateTo("/" + board.value.id)
@@ -73,7 +81,15 @@ onMounted(async () => {
 })
 
 const submitNewSuggestion = async () => {
-  if (1 > title.value.trim().length && title.value.trim().length >= 120) return;
+  if (title.value.trim().length < 1 || title.value.trim().length >= 120) {
+    titleError.value = "Titel muss zwischen 1 und 120 Zeichen lang sein.";
+    return;
+  }
+
+  if (description.value.trim().length < 1) {
+    descriptionError.value = "Beschreibung muss mindestens 1 Zeichen lang sein.";
+    return;
+  }
 
   const {data, error} = await tado.createSuggestion({
     title: title.value,
