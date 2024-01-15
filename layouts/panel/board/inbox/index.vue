@@ -104,9 +104,10 @@
                   <p class="mb-8 font-medium">Bisher wurden noch keine Vorschläge geteilt.</p>
                   <p class="flex flex-col gap-2 text-gray-600 text-center text-sm">
                     <span>Nutzer können über folgenden Link öffentlich Vorschläge teilen:</span>
-                    <a :href="`http://localhost:3000/${route.params.boardId}`" class="underline">http://localhost:3000/{{
+                    <NuxtLink :to="route.params.boardId" class="underline" target="_blank">http://localhost:3000/{{
                         route.params.boardId
-                      }}</a>
+                      }}
+                    </NuxtLink>
                   </p>
                 </template>
               </div>
@@ -135,10 +136,12 @@ const suggestionsOrder = useState("inbox:suggestionsOrder", () => 'NEWEST');
 const {data: categories, error: categoriesError} = await tado.getCategories(route.params.boardId as String);
 const {data: suggestions, error: suggestionsError} = await tado.getSuggestions(route.params.boardId as String);
 
+
 if (categoriesError.value || suggestionsError.value) {
   throw createError({
     statusCode: 404,
     statusMessage: "Board nicht gefunden",
+    fatal: true
   })
 }
 

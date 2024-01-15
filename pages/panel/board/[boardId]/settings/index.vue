@@ -59,8 +59,8 @@ const updateTitle = async () => {
   if (error.value) {
     showNotification({
       icon: XCircle,
-      title: error.value.name,
-      message: error.value.message,
+      title: error.value.data.error,
+      message: error.value.data.message,
       type: "BANNER",
       status: "ERROR",
       duration: 5000
@@ -84,8 +84,8 @@ const deleteBoard = async () => {
   if (error.value) {
     showNotification({
       icon: XCircle,
-      title: error.value.name,
-      message: error.value.message,
+      title: error.value.data.error,
+      message: error.value.data.message,
       type: "BANNER",
       status: "ERROR",
       duration: 5000

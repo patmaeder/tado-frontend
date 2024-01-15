@@ -1,41 +1,22 @@
-# Nuxt 3 Minimal Starter
+![Tado Logo](./public/tado_logo_204px.png)
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+# Tado Frontend
 
-## Setup
+Tado is a platform for collecting feedback from users, employees or other groups of people.
+They can use tado to share ideas and suggestions, exchange ideas with each other and further refine them independently.
+The aim of tado is to centralize and simplify feedback management for companies.
 
-Make sure to install the dependencies:
+## Structure
 
-```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
+Tado's front-end includes a private administration area accessible under `/panel`, while the view for users to view and
+share posts is publicly visible and directly localised as a sub-path.
 
 ## Development Server
 
 Start the development server on `http://localhost:3000`:
 
 ```bash
-# npm
 npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
 ## Production
@@ -43,33 +24,19 @@ bun run dev
 Build the application for production:
 
 ```bash
-# npm
 npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
 ```
 
-Locally preview production build:
+## Example user
 
-```bash
-# npm
-npm run preview
+An administrator with the following credentials has already been created:
 
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
+```text
+email@example.test
+$Password
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+This user has two boards with already shared suggestions, which can be accessed under the following URLs:
+
+- [http://localhost:8080/5ae5e191-6843-4733-ae5d-a221ffccc6b9](http://localhost:8080/5ae5e191-6843-4733-ae5d-a221ffccc6b9)
+- [http://localhost:8080/5ae5e191-6843-4733-ae5d-a221ffccc6b9](http://localhost:8080/5ae5e191-6843-4733-ae5d-a221ffccc6b9)

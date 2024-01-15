@@ -18,7 +18,7 @@ export default class Tado {
     }
 
     static updateBoard(boardId: string, boardDTO: BoardDTO) {
-        return this.fetchTado<Board>("/boards/" + boardId, {method: "PATCH", body: boardDTO});
+        return this.fetchTado<Board>("/boards/" + boardId, {method: "PATCH", body: boardDTO, cache: "no-cache"});
     }
 
     static deleteBoard(boardId: string) {
@@ -102,16 +102,6 @@ export default class Tado {
             'Access-Control-Allow-Origin': '*',
         }
 
-        const res = useFetch(this.apiUrl + path, opts) as AsyncData<T, FetchError<any> | null>;
-
-        if (res.error) {
-            throw createError({
-                statusCode: 500,
-                fatal: true,
-                statusMessage: 'Service currently unavailable. This problem won\'t be resolved by reloading the page. We apologize for the inconvenience.',
-            })
-        }
-
-        return res;
+        return useFetch(this.apiUrl + path, opts) as AsyncData<T, FetchError<any> | null>;
     }
 }

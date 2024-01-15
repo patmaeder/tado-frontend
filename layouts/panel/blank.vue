@@ -1,4 +1,8 @@
 <template>
+  <Head>
+    <link href='/tado_favicon.png' rel='icon' type='image/png'>
+  </Head>
+
   <div v-if="viewportToSmall"
        class="w-full h-screen flex flex-col items-center justify-center text-white bg-secondary z-50">
     <div class="max-w-3xl">
@@ -8,7 +12,7 @@
       <p class="text-secondary-200 text-center">Wechseln Sie ihr Endgerät oder vergrößeren Sie ihr Browserfenster.</p>
     </div>
   </div>
-  <div v-else id="panel" class=" relative h-screen max-h-screen w-full flex flex-col bg-gray-100 overflow-hidden">
+  <div v-else id="panel" class="relative h-screen max-h-screen w-full flex flex-col bg-gray-100 overflow-hidden">
     <slot></slot>
   </div>
   <div v-if="notifications !== null && notifications.size > 0"
@@ -20,6 +24,8 @@
 <script lang="ts" setup>
 const viewportToSmall = ref(false);
 const {notifications} = useToastNotifications();
+
+useHead({})
 
 if (process.client) {
   addEventListener("resize", () => {

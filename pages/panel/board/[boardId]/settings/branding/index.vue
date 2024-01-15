@@ -8,8 +8,8 @@
           <fieldset class="max-w-full inline-flex flex-col gap-8 items-start">
             <label class="w-full flex flex-col">
               <span class="mb-4 text-xl font-semibold">Logo</span>
-              <input class="appearance-none w-0 h-0 overflow-hidden"
-                     type="file" @change="convertFile">
+              <input accept="image/avif, image/gif, image/jpeg, image/png, image/webp"
+                     class="appearance-none w-0 h-0 overflow-hidden" type="file" @change="convertFile">
               <div class="w-full flex items-center gap-4 py-2 px-4 bg-gray-200 outline-none rounded">
                 <span class="flex-grow break-all">{{ logoFilename }}</span>
                 <Upload class="flex-shrink-0" height="16"/>
@@ -110,8 +110,8 @@ const save = async () => {
   if (error.value) {
     showNotification({
       icon: XCircle,
-      title: error.value.name,
-      message: error.value.message,
+      title: error.value.data.error,
+      message: error.value.data.message,
       type: "BANNER",
       status: "ERROR",
       duration: 5000

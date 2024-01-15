@@ -8,7 +8,7 @@ export const useToastNotifications = () => {
         if (notification.type == "BANNER") {
             setTimeout(() => {
                 notifications.value.delete(id);
-            }, notification.duration)
+            }, notification.duration || 5000)
         }
     }
 

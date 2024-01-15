@@ -28,7 +28,11 @@
 </template>
 
 <script lang="ts" setup>
+const {logout} = useAuth0();
 const props = defineProps(["error"])
 
-const handleError = () => clearError({redirect: '/'})
+const handleError = async () => {
+  clearError();
+  await logout("/");
+}
 </script>

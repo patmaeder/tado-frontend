@@ -37,7 +37,11 @@
               </label>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            <div v-if="suggestions.length == 0" class="flex flex-col items-center gap-2 opacity-40">
+              <p>Bisher wurden noch keine Beiträge geteilt.</p>
+              <p v-if="!isAuthenticated">Melden Sie sich an um einen Beitrag zu teilen.</p>
+            </div>
+            <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
 
               <NuxtLink v-for="suggestion in orderedSuggestions" :key="suggestion.id"
                         :to="`/${route.params.boardId}/suggestion/${suggestion.id}`"
@@ -101,6 +105,7 @@ if (boardError.value || suggestionsError.value) {
   throw createError({
     statusCode: 404,
     statusMessage: 'Seite nicht gefunden',
+    fatal: true
   })
 }
 
@@ -141,8 +146,8 @@ const upvote = async (suggestionId: String) => {
   if (error.value) {
     showNotification({
       icon: XCircle,
-      title: error.value.name,
-      message: error.value.message,
+      title: error.value.data.error,
+      message: error.value.data.message,
       type: "BANNER",
       status: "ERROR",
       duration: 5000
@@ -172,8 +177,8 @@ const unvote = async (suggestionId: String) => {
   if (error.value) {
     showNotification({
       icon: XCircle,
-      title: error.value.name,
-      message: error.value.message,
+      title: error.value.data.error,
+      message: error.value.data.message,
       type: "BANNER",
       status: "ERROR",
       duration: 5000

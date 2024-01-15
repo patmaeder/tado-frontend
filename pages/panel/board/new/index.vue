@@ -7,6 +7,49 @@
           <span>Zurück</span>
         </button>
       </div>
+
+      <div class="absolute right-0 m-6">
+        <button class="flex gap-4 items-center text-white" @click="toggleDropdownMenu">
+          <span>Menü</span>
+          <ChevronDown height="20"/>
+        </button>
+        <dialog ref="dropdownMenu"
+                class="absolute top-0 translate-y-8 w-80 mt-4 mr-0 ml-auto bg-transparent z-10">
+          <div v-if="boards.length > 0"
+               class="mb-2 p-6 bg-white rounded-md border border-gray-300 drop-shadow-md overflow-hidden">
+            <ul class="w-full flex flex-col gap-4">
+              <li v-for="board in boards" :key="board.id"
+                  :class="`h-14 w-full p-2 ${board.appearance == 'DARK' ? 'bg-neutral-900' : ''} border border-gray-200 rounded-md`">
+                <NuxtLink :to="`/panel/board/${board.id}/inbox`"
+                          class="outline-none">
+                  <img :src="board.logo" class="h-full w-full object-contain object-left">
+                </NuxtLink>
+              </li>
+            </ul>
+          </div>
+          <div class="rounded-md bg-white border border-gray-300 drop-shadow-md overflow-hidden">
+            <div class="p-6">
+              <button class="flex items-center gap-4 hover:text-gray-700"
+                      @click="() => {logout('/')}">
+                <LogOut/>
+                <span>Ausloggen</span>
+              </button>
+            </div>
+            <NuxtLink
+                class="flex items-center justify-between gap-4 p-6 text-primary bg-primary-50 hover:bg-primary-100"
+                to="/panel/settings">
+              <div class="flex-grow flex flex-col">
+                <span>Account-Einstellungen</span>
+                <span class="text-sm font-light">{{ user.email }}</span>
+              </div>
+              <div class="flex items-center justify-center h-8 aspect-square rounded-full border border-primary">
+                <User class="stroke-primary" height="16"/>
+              </div>
+            </NuxtLink>
+          </div>
+        </dialog>
+      </div>
+
       <div class="flex-grow flex items-center justify-center w-full ">
         <div class="flex flex-col w-[30rem] p-10 bg-white rounded-md shadow">
           <h1 class="mb-8 text-xl font-medium text-center">Neues Board erstellen</h1>
@@ -31,7 +74,7 @@
               <label class="relative flex flex-col min-h-[49px] p-4 border border-gray-300 rounded"
                      for="createNewBoardForm__logo">
                 <input id="createNewBoardForm__logo"
-                       accept="image/jpeg, image/png, image/gif, image/avif"
+                       accept="image/avif, image/gif, image/jpeg, image/png, image/webp"
                        class="peer w-0 h-0 opacity-0"
                        name="logo"
                        required
@@ -97,10 +140,14 @@
 </template>
 
 <script lang="ts" setup>
-import {ArrowLeft, Upload, XCircle} from 'lucide-vue-next';
+import {ArrowLeft, ChevronDown, LogOut, Upload, User, XCircle} from 'lucide-vue-next';
 
 const router = useRouter();
 const {showNotification} = useToastNotifications();
+const {user, logout} = useAuth0();
+const {data: boards, refresh: refreshBoards} = await tado.getBoards();
+
+const dropdownMenu = ref<HTMLDialogElement>();
 const form = ref<HTMLFormElement>();
 const title = ref('');
 const titleError = ref('');
@@ -112,8 +159,8 @@ const descriptionError = ref('');
 const appearance = ref("LIGHT")
 const accentColor = ref("#FF843D");
 
-const blobToBase64 = async (blob: Blob) => {
-  return await fileToBase64(blob);
+const toggleDropdownMenu = () => {
+  dropdownMenu.value?.open ? dropdownMenu.value?.close() : dropdownMenu.value?.show();
 }
 
 const createBoard = async () => {
@@ -148,8 +195,8 @@ const createBoard = async () => {
   if (error.value) {
     showNotification({
       icon: XCircle,
-      title: error.value.name,
-      message: error.value.message,
+      title: error.value.data.error,
+      message: error.value.data.message,
       type: "BANNER",
       status: "ERROR",
       duration: 5000
@@ -157,6 +204,7 @@ const createBoard = async () => {
     return;
   }
 
+  await refreshBoards();
   navigateTo(`/panel/board/${ board.value.id }/inbox`)
 }
 

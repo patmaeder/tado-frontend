@@ -1,8 +1,8 @@
 <template>
   <div class="w-[32rem] flex flex-col bg-white border border-b-0 border-gray-200 rounded shadow">
     <div class="flex items-center gap-4 p-4 ">
-      <div class="flex-grow flex items-center gap-2">
-        <Component :is="notification.icon" :class="`text-${color}`" height="20"/>
+      <div class="flex-grow flex items-center gap-3">
+        <Component :is="notification.icon" :class="`text-${color}`" class="min-w-[20px]" height="20"/>
         <div>
           <p class="font-medium">{{ notification.title }}</p>
           <p>{{ notification.message }}</p>
