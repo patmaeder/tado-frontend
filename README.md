@@ -27,7 +27,7 @@ Build the application for production:
 npm run build
 ```
 
-## Example user
+## Authentication/Authorization
 
 An administrator with the following credentials has already been created:
 
@@ -38,5 +38,5 @@ $Password
 
 This user has two boards with already shared suggestions, which can be accessed under the following URLs:
 
-- [http://localhost:8080/5ae5e191-6843-4733-ae5d-a221ffccc6b9](http://localhost:8080/5ae5e191-6843-4733-ae5d-a221ffccc6b9)
-- [http://localhost:8080/5ae5e191-6843-4733-ae5d-a221ffccc6b9](http://localhost:8080/5ae5e191-6843-4733-ae5d-a221ffccc6b9)
+- [http://localhost:3000/board/5ae5e191-6843-4733-ae5d-a221ffccc6b9](http://localhost:3000/board/5ae5e191-6843-4733-ae5d-a221ffccc6b9)
+- [http://localhost:3000/board/d8017955-b744-4653-a249-ad32076ac584](http://localhost:3000/board/d8017955-b744-4653-a249-ad32076ac584)

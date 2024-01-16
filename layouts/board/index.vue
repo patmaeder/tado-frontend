@@ -5,16 +5,18 @@
            class="min-h-screen bg-slate-100 dark:bg-neutral-900 dark:text-white overflow-y-auto">
         <header class="w-full bg-white dark:bg-neutral-950">
           <div class="w-full flex justify-end p-6">
-            <client-only>
+            <ClientOnly>
               <div v-if="isAuthenticated" class="flex items center">
                 <span>{{ user?.nickname }}</span>
                 <button class="ml-3 pl-2 border-l border-gray-300"
-                        @click="logout">
+                        @click="() => {logout('/board?board=' + route.params.boardId)}">
                   <LogOut height="16"/>
                 </button>
               </div>
-              <button v-else class="font-medium" @click="login">Einloggen</button>
-            </client-only>
+              <button v-else class="font-medium"
+                      @click="() => {login(route.fullPath, '/board?board=' + route.params.boardId)}">Einloggen
+              </button>
+            </ClientOnly>
           </div>
           <div class="px-12 sm:px-16 md:px-28 xl:px-72 pb-12 sm:pb-16">
             <img :alt="board.title + ' Logo'" :src="board.logo" class="h-16 mb-6">
@@ -44,7 +46,7 @@
             <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
 
               <NuxtLink v-for="suggestion in orderedSuggestions" :key="suggestion.id"
-                        :to="`/${route.params.boardId}/suggestion/${suggestion.id}`"
+                        :to="`/board/${route.params.boardId}/suggestion/${suggestion.id}`"
                         class="flex flex-col bg-white text-black rounded-md overflow-hidden">
                 <div class="flex-grow p-8 pb-4">
                   <h2 class="mb-2 lg:mb-4 font-medium text-md lg:text-lg line-clamp-2">{{ suggestion.title }}</h2>
@@ -77,7 +79,7 @@
 
         <client-only>
           <div v-if="isAuthenticated" class="fixed bottom-4 sm:bottom-10 left-1/2 -translate-x-1/2">
-            <NuxtLink :to="`/${board.id}/new`"
+            <NuxtLink :to="`/board/${route.params.boardId}/new`"
                       class="flex items-center p-2 bg-accent rounded-full shadow-md hover:brightness-95 cursor-pointer">
               <Plus class="h-12 w-12 p-2 text-white bg-white bg-opacity-20 rounded-full"/>
               <span class="px-6 text-white text-base md:text-lg font-medium whitespace-nowrap">Vorschlag teilen</span>
@@ -136,7 +138,7 @@ const orderedSuggestions = computed(() => {
 })
 
 const toggleUpvote = async (suggestionId: String) => {
-  if (!isAuthenticated.value) await login()
+  if (!isAuthenticated.value) await login(route.fullPath, "/board?board=" + route.params.boardId)
   upvotes.value.includes(suggestionId) ? await unvote(suggestionId) : await upvote(suggestionId);
 }
 

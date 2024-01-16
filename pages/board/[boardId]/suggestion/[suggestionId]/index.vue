@@ -82,7 +82,6 @@
 import {Info, MessageSquare, Send, X, XCircle} from 'lucide-vue-next'
 
 const route = useRoute();
-const router = useRouter();
 const {showNotification} = useToastNotifications();
 const {user, isAuthenticated, login} = useAuth0();
 
@@ -99,15 +98,15 @@ onMounted(async () => {
 
   dialog.value?.addEventListener("close", (event) => {
     event.preventDefault();
-    navigateTo("/" + route.params.boardId);
+    navigateTo("/board/" + route.params.boardId);
   })
 
   if (isAuthenticated.value) await refreshUpvotes();
 })
 
 const toggleUpvote = async (suggestionId: String) => {
-  if (!isAuthenticated.value) await login()
   upvotes.value.includes(suggestionId) ? await unvote(suggestionId) : await upvote(suggestionId);
+  if (!isAuthenticated.value) await login(route.fullPath, "/board?board=" + route.params.boardId)
 }
 
 const upvote = async (suggestionId: String) => {

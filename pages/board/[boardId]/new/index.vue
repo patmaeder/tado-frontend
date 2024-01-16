@@ -70,13 +70,7 @@ onMounted(async () => {
 
   dialog.value?.addEventListener("close", (event) => {
     event.preventDefault();
-
-    try {
-      const previous = router.getRoutes().pop();
-      if (previous?.path == "/:boardId()") router.back();
-    } catch (e) {
-      navigateTo("/" + route.params.boardId);
-    }
+    navigateTo("/board/" + route.params.boardId);
   })
 })
 
@@ -86,8 +80,8 @@ const submitNewSuggestion = async () => {
     return;
   }
 
-  if (description.value.trim().length < 1) {
-    descriptionError.value = "Beschreibung muss mindestens 1 Zeichen lang sein.";
+  if (description.value.trim().length < 1 || description.value.trim().length >= 600) {
+    descriptionError.value = "Beschreibung muss zwischen 1 und 600 Zeichen lang sein.";
     return;
   }
 
@@ -112,7 +106,7 @@ const submitNewSuggestion = async () => {
     return;
   }
 
-  navigateTo(`/${ board.value.id }/suggestion/${ data.value.id }`);
+  navigateTo(`/board/${ board.value.id }/suggestion/${ data.value.id }`);
 }
 </script>
 

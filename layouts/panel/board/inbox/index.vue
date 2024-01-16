@@ -104,7 +104,8 @@
                   <p class="mb-8 font-medium">Bisher wurden noch keine Vorschläge geteilt.</p>
                   <p class="flex flex-col gap-2 text-gray-600 text-center text-sm">
                     <span>Nutzer können über folgenden Link öffentlich Vorschläge teilen:</span>
-                    <NuxtLink :to="route.params.boardId" class="underline" target="_blank">http://localhost:3000/{{
+                    <NuxtLink :to="`/board/${route.params.boardId}`" class="underline" target="_blank">
+                      http://localhost:3000/board/{{
                         route.params.boardId
                       }}
                     </NuxtLink>

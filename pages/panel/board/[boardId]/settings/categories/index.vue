@@ -113,8 +113,6 @@ const newCategoryColor = ref<HTMLInputElement>();
 })*/
 
 const updateTitle = async (categoryId: String) => {
-  console.log("triggered")
-
   const {error} = await tado.updateCategory(categoryId, {
     //@ts-ignore
     title: event.target.value,

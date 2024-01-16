@@ -30,7 +30,7 @@
                     :class="`h-14 w-full p-2 ${board.appearance == 'DARK' ? 'bg-neutral-900' : ''} border border-gray-200 rounded-md`">
                   <NuxtLink :to="`/panel/board/${board.id}/inbox`"
                             class="outline-none">
-                    <img :src="board.logo" class="h-full w-full object-contain object-left">
+                    <img :src="board?.logo" class="h-full w-full object-contain object-left">
                   </NuxtLink>
                 </li>
                 <li>
@@ -79,8 +79,13 @@ import {ChevronDown, LogOut, Plus, User} from "lucide-vue-next";
 const route = useRoute();
 const {user, logout} = useAuth0();
 const {data: boards, error: boardsError} = await tado.getBoards();
-const board = boards.value.find(board => board.id == route.params.boardId);
+const board = ref();
 const dropdownMenu = ref<HTMLDialogElement>();
+
+if (route.params.boardId) {
+  const res = await tado.getBoard(route.params.boardId as string);
+  board.value = res.data.value;
+}
 
 const toggleDropdownMenu = () => {
   dropdownMenu.value?.open ? dropdownMenu.value?.close() : dropdownMenu.value?.show();

@@ -77,12 +77,14 @@
 
         <div class="flex-shrink-0 mt-8">
           <form class="flex items-end gap-4" @submit.prevent="comment">
-            <!-- TODO: Resize textarea to auto fit content -->
-            <textarea
-                v-model="commentary"
-                :disabled="suggestion?.locked"
-                class="flex-grow h-12 pl-6 py-2.5 rounded bg-gray-100 outline-none placeholder-gray-500 disabled:placeholder-gray-300"
-                placeholder="Kommentieren..."></textarea>
+            <div class="flex-grow grid grid-cols-1 grid-rows-1">
+              <div class="invisible p-3 row-start-1 row-span-1 col-start-1 col-span-1">{{ commentary }}</div>
+              <textarea v-model="commentary"
+                        :class="`p-3 row-start-1 row-span-1 col-start-1 col-span-1 bg-gray-100 dark:bg-neutral-800 ${commentaryError ? 'border border-red-600' : ''} rounded disabled:placeholder-gray-300 outline-none`"
+                        :disabled="suggestion.locked"
+                        placeholder="Kommentieren..."
+                        rows="1"></textarea>
+            </div>
             <button
                 :disabled="suggestion?.locked"
                 class="flex-shrink-0 flex justify-center items-center h-12 w-12 rounded bg-primary hover:bg-primary-400 disabled:bg-primary-200 disabled:hover:bg-primary-200"
@@ -146,6 +148,7 @@ const {data: suggestion, refresh: refreshSuggestion} = await tado.getSuggestion(
 const {data: comments, refresh: refreshComments} = await tado.getComments(route.params.suggestionId as string);
 const {data: categories} = await tado.getCategories(route.params.boardId as string);
 const commentary = ref();
+const commentaryError = ref(false);
 const selectedCategory = ref<String>(suggestion.value.category.id);
 const chooseCategoryDialog = ref<HTMLDialogElement>();
 
@@ -276,10 +279,8 @@ const chooseCategory = async () => {
 
 const comment = async () => {
 
-  // TODO: Don't rerender entire comment tree when posting new comment
-
-  if (!(commentary.value.trim().length > 0)) {
-    // TODO: Error anzeigen
+  if (!(commentary.value.trim().length < 1 || commentary.value.trim().length > 600)) {
+    commentaryError.value = true;
     return;
   }
 
