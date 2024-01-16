@@ -80,7 +80,7 @@ const submitNewSuggestion = async () => {
     return;
   }
 
-  if (description.value.trim().length < 1 || description.value.trim().length >= 600) {
+  if (description.value.trim().length < 1 || description.value.trim().length > 600) {
     descriptionError.value = "Beschreibung muss zwischen 1 und 600 Zeichen lang sein.";
     return;
   }

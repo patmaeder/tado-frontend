@@ -278,8 +278,7 @@ const chooseCategory = async () => {
 }
 
 const comment = async () => {
-
-  if (!(commentary.value.trim().length < 1 || commentary.value.trim().length > 600)) {
+  if (commentary.value.trim().length < 1 || commentary.value.trim().length > 600) {
     commentaryError.value = true;
     return;
   }

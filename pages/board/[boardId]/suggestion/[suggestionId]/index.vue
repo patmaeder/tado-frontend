@@ -59,8 +59,8 @@
               <form v-else class="flex gap-4 items-end max-h-full" @submit.prevent="comment">
                 <div class="flex-grow grid grid-cols-1 grid-rows-1">
                   <div class="invisible p-3 row-start-1 row-span-1 col-start-1 col-span-1">{{ commentary }}</div>
-                  <textarea v-model="commentary" :disabled="suggestion.locked || !isAuthenticated"
-                            class="p-3 row-start-1 row-span-1 col-start-1 col-span-1 bg-gray-50 dark:bg-neutral-800 rounded disabled:placeholder-gray-300 outline-none"
+                  <textarea v-model="commentary" :class="`p-3 row-start-1 row-span-1 col-start-1 col-span-1 bg-gray-50 dark:bg-neutral-800 ${commentaryError ? 'border border-red-600' : ''} rounded disabled:placeholder-gray-300 outline-none`"
+                            :disabled="suggestion.locked || !isAuthenticated"
                             placeholder="Kommentieren..."
                             rows="1"></textarea>
                 </div>
@@ -91,6 +91,7 @@ const {data: suggestion} = await tado.getSuggestion(route.params.suggestionId as
 const {data: comments, refresh: refreshComments} = await tado.getComments(route.params.suggestionId as String);
 const {data: upvotes, refresh: refreshUpvotes} = await tado.getUpvotes();
 const commentary = ref("");
+const commentaryError = ref(false);
 const dialog = ref<HTMLDialogElement>();
 
 onMounted(async () => {
@@ -150,7 +151,10 @@ const unvote = async (suggestionId: String) => {
 }
 
 const comment = async () => {
-  if (!(commentary.value.trim().length > 0)) return;
+  if (commentary.value.trim().length < 1 || commentary.value.trim().length > 600) {
+    commentaryError.value = true;
+    return;
+  }
 
   const {error} = await tado.createComment({
     message: commentary.value,

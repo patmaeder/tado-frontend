@@ -16,7 +16,4 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             audience: "https://www.tado.com"
         }
     }, to.fullPath) as RedirectLoginResult;
-
-    //if (loginResult != null) return navigateTo(loginResult.appState)
-    //if (to.query.board) return navigateTo("/board/" + to.query.board)
 })
