@@ -6,22 +6,41 @@ Tado is a platform for collecting feedback from users, employees or other groups
 They can use tado to share ideas and suggestions, exchange ideas with each other and further refine them independently.
 The aim of tado is to centralize and simplify feedback management for companies.
 
+---
+
+1. [Structure](#structure)
+2. [Configuration](#configuration)
+3. [Up and Running](#up-and-running)
+4. [Authentication & Authorization](#authenticationauthorization)
+
+---
+
 ## Structure
 
-Tado's front-end includes a private administration area accessible under `/panel`, while the view for users to view and
-share posts is publicly visible and directly localised as a sub-path.
+Tado's front-end includes a private administration area accessible under `/panel`, while the landingpages to view and
+share posts are publicly visible and located as a sub-path of `/board`.
 
-## Development Server
+## Configuration
 
-Start the development server on `http://localhost:3000`:
+The URL under which the backend server can be reached is `localhost:8080` by default. However the hostname can be
+adjusted depending on the local configuration in the .env file.
+
+## Up and Running
+
+### Development
+
+To start the development server on `http://localhost:3000` open a terminal window and navigate to the root directory of
+this repository.
+Run the following command:
 
 ```bash
 npm run dev
 ```
 
-## Production
+### Production
 
-Build the application for production:
+To Build the application for production open a terminal window and navigate to the root directory of this repository.
+Run the following command:
 
 ```bash
 npm run build
